@@ -19,5 +19,14 @@
         <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,175,0,0" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" />
         <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="350,75,0,0" />
         <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="350, 100, 0, 0" />
+        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="350,230,0,0" />
+        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="350, 255, 0, 0" />
+        <Button Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="22,236,0,0" />
+        <Button Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="92,236,0,0" />
+        <Button Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="162,236,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="92,273,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,297,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100) " /><InlineUIContainer>
+        		<TextBox x:Name="probNum" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
+        	</InlineUIContainer></TextBlock>
     </Grid>
 </Window>
