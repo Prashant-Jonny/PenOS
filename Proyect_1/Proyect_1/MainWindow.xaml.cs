@@ -24,5 +24,13 @@ namespace Proyect_1
         {
             InitializeComponent();
         }
+
+        private void probNum_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (int.Parse(probNum.Text) >= 0 && int.Parse(probNum.Text) <= 100)
+            {
+                MessageBox.Show("Funciona");
+            }
+        }
     }
 }

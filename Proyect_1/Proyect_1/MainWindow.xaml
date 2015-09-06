@@ -24,9 +24,26 @@
         <Button Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="22,236,0,0" />
         <Button Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="92,236,0,0" />
         <Button Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="162,236,0,0" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="92,273,0,0" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,297,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100) " /><InlineUIContainer>
-        		<TextBox x:Name="probNum" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="90,275,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,300,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " /><InlineUIContainer>
+        		<TextBox x:Name="probNum" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" LostKeyboardFocus="probNum_LostKeyboardFocus" />
+        	</InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,345,0,0"><Run Text="Select an algorithm    " /><InlineUIContainer>
+            <ComboBox x:Name="algSelect" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <ComboBoxItem Content="Round Robin" />
+                <ComboBoxItem Content="Priority" />
+            </ComboBox>
+            </InlineUIContainer></TextBlock>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="10,270,0,0" VerticalAlignment="Top" Width="215" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,375,0,0"><Run Text="Quantum    " /><InlineUIContainer>
+            <TextBox x:Name="quantum" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
+        </InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,405,0,0" ><Run Text="Delay     " /><InlineUIContainer>
+        		<ComboBox x:Name="delaySelec">
+                    <ComboBoxItem Content="Slow" />
+                    <ComboBoxItem Content="Medium" />
+                    <ComboBoxItem Content="Fast" />
+                </ComboBox>
         	</InlineUIContainer></TextBlock>
     </Grid>
 </Window>
