@@ -6,54 +6,58 @@
         xmlns:local="clr-namespace:Proyect_1"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="475">
-    <Grid>
+    <Grid Margin="0,0,-8,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="467*" />
+            <RowDefinition Height="102*" />
+        </Grid.RowDefinitions>
         <Label  Content="Clock" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
         <TextBlock x:Name="clock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" Margin="10,35,0,0" />
-        <Label Content="New" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,75,0,0" />
-        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="50,100,0,0" />
-        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,75,0,0" />
-        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="150,100,0,0" />
+        <Label Content="New" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47,75,0,0" />
+        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="47,100,0,0" />
+        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="139,75,0,0" />
+        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="139,100,0,0" />
         <Label Content="Running" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,75,0,0" />
         <TextBlock x:Name="running" HorizontalAlignment="Left" Margin="250,100,0,0" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" />
         <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,150,0,0" />
         <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,175,0,0" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" />
-        <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="350,75,0,0" />
-        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="350, 100, 0, 0" />
-        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="350,230,0,0" />
-        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="350, 255, 0, 0" />
-        <Button Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="22,236,0,0" />
-        <Button Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="92,236,0,0" />
-        <Button Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="162,236,0,0" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="90,275,0,0" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,300,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " /><InlineUIContainer>
-        		<TextBox x:Name="probNum" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" LostKeyboardFocus="probNum_LostKeyboardFocus" />
+        <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,256,0,0" />
+        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" />
+        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="337,75,0,0" />
+        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="337,100,0,0" />
+        <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="29,217,0,0" />
+        <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="99,217,0,0" Click="playButton_Click" />
+        <Button x:Name="pauseButton" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="169,217,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="97,256,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,281,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " /><InlineUIContainer>
+        		<TextBox x:Name="probability_text" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
         	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,345,0,0"><Run Text="Select an algorithm    " /><InlineUIContainer>
-            <ComboBox x:Name="algSelect" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,326,0,0"><Run Text="Select an algorithm    " /><InlineUIContainer>
+            <ComboBox x:Name="algSelected" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <ComboBoxItem Content="Round Robin" />
                 <ComboBoxItem Content="Priority" />
             </ComboBox>
             </InlineUIContainer></TextBlock>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="10,270,0,0" VerticalAlignment="Top" Width="215" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,375,0,0"><Run Text="Quantum    " /><InlineUIContainer>
-            <TextBox x:Name="quantum" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="17,251,0,0" VerticalAlignment="Top" Width="215" Grid.RowSpan="2" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,356,0,0"><Run Text="Quantum    " /><InlineUIContainer>
+            <TextBox x:Name="quantum_text" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
         </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,405,0,0" ><Run Text="Delay     " /><InlineUIContainer>
-        		<ComboBox x:Name="delaySelec">
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,386,0,0" ><Run Text="Delay     " /><InlineUIContainer>
+        		<ComboBox x:Name="delaySelected">
                     <ComboBoxItem Content="Slow" />
                     <ComboBoxItem Content="Medium" />
                     <ComboBoxItem Content="Fast" />
                 </ComboBox>
         	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="62,435,0,0"><Run Text="Limites de las Listas"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,455,0,0"><Run Text="Nuevos     "/><InlineUIContainer>
-            <TextBox x:Name="newLimit" Width="20"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="97,411,0,0"><Run Text="List Limits" /></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,436,0,0"><Run Text="New               " /><InlineUIContainer>
+        		<TextBox x:Name="newLimit_text" Width="20" />
+        	</InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,461,0,0" Grid.RowSpan="2"><Run Text="Ready             " /><InlineUIContainer>
+            <TextBox x:Name="readyLimit_text" Width="20" />
         </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,480,0,0"><Run Text="Listos     "/><InlineUIContainer>
-            <TextBox x:Name="readyLimit" Width="20"/>
-        </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,505,0,0"><Run Text="Esperando I/O     "/><InlineUIContainer>
-            <TextBox x:Name="waitingLimit" Width="20"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,19,0,0" Grid.Row="1"><Run Text="Waiting I/O     " /><InlineUIContainer>
+            <TextBox x:Name="waitingLimit_text" Width="20" />
         </InlineUIContainer></TextBlock>
     </Grid>
 </Window>
