@@ -45,5 +45,15 @@
                     <ComboBoxItem Content="Fast" />
                 </ComboBox>
         	</InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="62,435,0,0"><Run Text="Limites de las Listas"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,455,0,0"><Run Text="Nuevos     "/><InlineUIContainer>
+            <TextBox x:Name="newLimit" Width="20"/>
+        </InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,480,0,0"><Run Text="Listos     "/><InlineUIContainer>
+            <TextBox x:Name="readyLimit" Width="20"/>
+        </InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="22,505,0,0"><Run Text="Esperando I/O     "/><InlineUIContainer>
+            <TextBox x:Name="waitingLimit" Width="20"/>
+        </InlineUIContainer></TextBlock>
     </Grid>
 </Window>
