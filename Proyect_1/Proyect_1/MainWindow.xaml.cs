@@ -26,11 +26,15 @@ namespace Proyect_1
         private int quantum;
         private int probability;
 
-        private Simulation simul;
+        public static bool paused;
+        public static bool stopped;
+
+        private Simulation simul = new Simulation();
 
         public MainWindow()
         {
             InitializeComponent();
+            Simulation.mainWindow = this;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -41,9 +45,19 @@ namespace Proyect_1
             }
             else
             {
-                simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.SelectedItem.ToString(), delaySelected.SelectedItem.ToString());
+                simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.Text, delaySelected.Text);
                 simul.Start();
             }
+        }
+
+        private void stopButton_Click(object sender, RoutedEventArgs e)
+        {
+            stopped = true;
+        }
+
+        private void pauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            paused = true;
         }
 
         private string errorCheck()

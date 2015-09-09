@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Proyect_1 {
-
-    internal class Process {
+namespace Proyect_1
+{
+    internal class Process
+    {
         public string id { get; set; }
         public int cpuUse { get; }
         public int cpuTime { get; }
@@ -15,7 +16,8 @@ namespace Proyect_1 {
         public int endTime { get; set; }
         public int sysEndTime { get; set; }
 
-        public Process(int id) {
+        public Process(int id)
+        {
             Random rand = new Random();
 
             this.id = "P" + id;
