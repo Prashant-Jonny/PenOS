@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proyect_1
 {
-    internal class Process
+    public class Process
     {
         public string id { get; set; }
         public int cpuUse { get; }

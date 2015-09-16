@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Proyect_1
 {
-    internal class Simulation
+    public class Simulation
     {
         private int probability;
         private int quantum;
@@ -22,12 +22,13 @@ namespace Proyect_1
         private string algorithm;
         private string delay;
 
-        private List<Process> newList;
-        private List<Process> readyList;
-        private List<Process> waitingList;
-        private List<Process> terminatedList;
+        private List<Process> newList = new List<Process>();
+        private List<Process> readyList = new List<Process>();
+        private List<Process> waitingList = new List<Process>();
+        private List<Process> terminatedList = new List<Process>();
 
-        public static MainWindow mainWindow;
+        public static MainWindow mWindow;
+        public static PCB pcb;
 
         public Simulation()
         {
@@ -52,25 +53,21 @@ namespace Proyect_1
 
         public async void Start()
         {
-            mainWindow.clock.Text = 0.ToString();
+            mWindow.clock.Text = 0.ToString();
             clock = 0;
             Random rand = new Random();
 
-            while (!MainWindow.stopped || !MainWindow.paused)
+            while (!mWindow.stopped || !mWindow.paused)
             {
-                mainWindow.clock.Text = clock.ToString();
+                mWindow.clock.Text = clock.ToString();
 
                 if (rand.Next(0, 100) <= probability)
                 {
                     Add(new Process(id));
                     id++;
+                    MessageBox.Show("Got here");
+                    pcbUpdate();
                 }
-                /*if (algorithm.Equals("Round Robin"))
-                {
-                }
-                else if (algorithm.Equals("Priority"))
-                {
-                }*/
                 switch (delay)
                 {
                     case "Slow":
@@ -89,8 +86,22 @@ namespace Proyect_1
                         MessageBox.Show("Error in delay input: " + delay);
                         break;
                 }
+                listUpdate();
                 clock++;
             }
+        }
+
+        private void pcbUpdate()
+        {
+            pcb.dataGrid.ItemsSource = newList;
+        }
+
+        private void listUpdate()
+        {
+            mWindow.newList.ItemsSource = newList.Select(Process => Process.id).ToList();
+            mWindow.readyList.ItemsSource = readyList.Select(Process => Process.id).ToList();
+            mWindow.waitingList.ItemsSource = waitingList.Select(Process => Process.id).ToList();
+            mWindow.terminatedList.ItemsSource = terminatedList.Select(Process => Process.id).ToList();
         }
     }
 }

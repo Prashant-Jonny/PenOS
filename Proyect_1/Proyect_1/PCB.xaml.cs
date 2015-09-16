@@ -19,9 +19,16 @@ namespace Proyect_1
     /// </summary>
     public partial class PCB : Window
     {
+        public Simulation simul;
+
         public PCB()
         {
             InitializeComponent();
+            Simulation.pcb = this;
+        }
+
+        private void dataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

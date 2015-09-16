@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Proyect_1"
         mc:Ignorable="d"
-        Title="PCB" Height="300" Width="300">
+        Title="PCB" Height="300" Width="600">
     <Grid>
-        
+        <DataGrid x:Name="dataGrid" Loaded="dataGrid_Loaded" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="249" Width="572" CanUserResizeColumns="True" CanUserResizeRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="50" />
+                <DataGridTextColumn Header="CPU Use" Binding="{Binding cpuUse}" />
+                <DataGridTextColumn Header="CPU Time" Binding="{Binding cpuTime}" />
+                <DataGridTextColumn Header="I/O Initial Time" Binding="{Binding IO_initTime}" />
+                <DataGridTextColumn Header="I/O Total Time" Binding="{Binding IO_totalTime}" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding endTime}" />
+                <DataGridTextColumn Header="System End Time" Binding="{Binding sysEndTime}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

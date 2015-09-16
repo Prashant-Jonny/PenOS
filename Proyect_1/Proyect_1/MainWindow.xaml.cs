@@ -20,21 +20,26 @@ namespace Proyect_1
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Values assigned by user
         private int newLimit;
+
         private int readyLimit;
         private int waitingLimit;
         private int quantum;
         private int probability;
 
-        public static bool paused;
-        public static bool stopped;
+        //Values altered by buttons
+        public bool paused = false;
+
+        public bool stopped = false;
+        private bool pcbOpen = false;
 
         private Simulation simul = new Simulation();
 
         public MainWindow()
         {
             InitializeComponent();
-            Simulation.mainWindow = this;
+            Simulation.mWindow = this;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -45,6 +50,10 @@ namespace Proyect_1
             }
             else
             {
+                stopped = false;
+                paused = false;
+                resetValues();
+
                 simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.Text, delaySelected.Text);
                 simul.Start();
             }
@@ -53,11 +62,40 @@ namespace Proyect_1
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
             stopped = true;
+            resetValues();
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
             paused = true;
+        }
+
+        private void pcb_Click(object sender, RoutedEventArgs e)
+        {
+            if (!pcbOpen)
+            {
+                pcbOpen = true;
+                PCB pcb = new PCB();
+                pcb.Show();
+            }
+            else
+            {
+                MessageBox.Show("A PCB Window is already running");
+            }
+        }
+
+        private void resetValues()
+        {
+            clock.Text = "0";
+
+            newList.ItemsSource = null;
+            newList.Items.Clear();
+            readyList.ItemsSource = null;
+            readyList.Items.Clear();
+            waitingList.ItemsSource = null;
+            waitingList.Items.Clear();
+            terminatedList.ItemsSource = null;
+            terminatedList.Items.Clear();
         }
 
         private string errorCheck()
