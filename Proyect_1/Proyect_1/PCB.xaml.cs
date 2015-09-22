@@ -12,23 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Proyect_1
-{
+namespace Proyect_1 {
+
     /// <summary>
     /// Interaction logic for PCB.xaml
     /// </summary>
-    public partial class PCB : Window
-    {
+    public partial class PCB : Window {
         public Simulation simul;
 
-        public PCB()
-        {
+        public PCB() {
             InitializeComponent();
             Simulation.pcb = this;
-        }
-
-        private void dataGrid_Loaded(object sender, RoutedEventArgs e)
-        {
         }
     }
 }

@@ -13,18 +13,18 @@
         </Grid.RowDefinitions>
         <Label  Content="Clock" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" />
         <TextBlock x:Name="clock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding }" VerticalAlignment="Top" Margin="10,35,0,0" />
-        <Label Content="New" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47,75,0,0" />
-        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="47,100,0,0" />
-        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="139,75,0,0" />
-        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="139,100,0,0" />
-        <Label Content="Running" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,75,0,0" />
-        <TextBlock x:Name="running" HorizontalAlignment="Left" Margin="250,100,0,0" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" />
-        <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,150,0,0" />
-        <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,175,0,0" TextWrapping="Wrap" Text="Holder" VerticalAlignment="Top" />
+        <Label Content="New" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47,64,0,0" />
+        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="47,90,0,0" />
+        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="139,64,0,0" />
+        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="139,90,0,0" />
+        <Label Content="Running" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,64,0,0" />
+        <TextBlock x:Name="running" HorizontalAlignment="Left" Margin="250,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" />
+        <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,123,0,0" />
+        <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" />
         <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,256,0,0" />
-        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" />
-        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="337,75,0,0" />
-        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="75" Margin="337,100,0,0" />
+        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="176" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" />
+        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="337,64,0,0" />
+        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="337,90,0,0" />
         <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="29,217,0,0" Click="stopButton_Click" />
         <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="99,217,0,0" Click="playButton_Click" />
         <Button x:Name="pauseButton" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="169,217,0,0" Click="pauseButton_Click" />
@@ -34,19 +34,19 @@
         	</InlineUIContainer></TextBlock>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,326,0,0"><Run Text="Select an algorithm    " /><InlineUIContainer>
             <ComboBox x:Name="algSelected" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <ComboBoxItem Content="Round Robin" />
-                <ComboBoxItem Content="Priority" />
+                <ComboBoxItem Content="RR" />
+                <ComboBoxItem Content="FCFS" />
             </ComboBox>
             </InlineUIContainer></TextBlock>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="289" Margin="17,251,0,0" VerticalAlignment="Top" Width="215" Grid.RowSpan="2" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,356,0,0"><Run Text="Quantum    " /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,356,0,0"><Run Text="Quantum (Seconds)   " /><InlineUIContainer>
             <TextBox x:Name="quantum_text" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
         </InlineUIContainer></TextBlock>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,386,0,0" ><Run Text="Delay     " /><InlineUIContainer>
         		<ComboBox x:Name="delaySelected">
-                    <ComboBoxItem Content="Slow" />
-                    <ComboBoxItem Content="Medium" />
-                    <ComboBoxItem Content="Fast" />
+                    <ComboBoxItem Content="Slow (2s)" />
+                    <ComboBoxItem Content="Medium (1s)" />
+                    <ComboBoxItem Content="Fast (0.5s)" />
                 </ComboBox>
         	</InlineUIContainer></TextBlock>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="97,411,0,0"><Run Text="List Limits" /></TextBlock>
@@ -59,6 +59,6 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,19,0,0" Grid.Row="1"><Run Text="Waiting I/O     " /><InlineUIContainer>
             <TextBox x:Name="waitingLimit_text" Width="20" />
         </InlineUIContainer></TextBlock>
-        <Button x:Name="pcb" Content="PCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="250,217,0,0" Click="pcb_Click" />
+        <Button x:Name="pcbButton" Content="PCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,217,0,0" Click="pcbButton_Click" />
     </Grid>
 </Window>

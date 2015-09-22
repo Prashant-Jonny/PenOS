@@ -13,13 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Proyect_1
-{
+namespace Proyect_1 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
+
         //Values assigned by user
         private int newLimit;
 
@@ -32,24 +32,24 @@ namespace Proyect_1
         public bool paused = false;
 
         public bool stopped = false;
-        private bool pcbOpen = false;
+        public bool pcbOpen = false;
+
+        public bool simulStarted = false;
 
         private Simulation simul = new Simulation();
+        private PCB pcb = new PCB();
 
-        public MainWindow()
-        {
+        public MainWindow() {
             InitializeComponent();
             Simulation.mWindow = this;
+            Simulation.pcb = pcb;
         }
 
-        private void playButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!errorCheck().Equals("Passed"))
-            {
+        private void playButton_Click(object sender, RoutedEventArgs e) {
+            if (!errorCheck().Equals("Passed")) {
                 MessageBox.Show(errorCheck());
             }
-            else
-            {
+            else {
                 stopped = false;
                 paused = false;
                 resetValues();
@@ -59,33 +59,27 @@ namespace Proyect_1
             }
         }
 
-        private void stopButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void stopButton_Click(object sender, RoutedEventArgs e) {
             stopped = true;
+            simul = new Simulation();
             resetValues();
         }
 
-        private void pauseButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void pauseButton_Click(object sender, RoutedEventArgs e) {
             paused = true;
         }
 
-        private void pcb_Click(object sender, RoutedEventArgs e)
-        {
-            if (!pcbOpen)
-            {
+        private void pcbButton_Click(object sender, RoutedEventArgs e) {
+            if (!pcbOpen) {
                 pcbOpen = true;
-                PCB pcb = new PCB();
                 pcb.Show();
             }
-            else
-            {
+            else {
                 MessageBox.Show("A PCB Window is already running");
             }
         }
 
-        private void resetValues()
-        {
+        private void resetValues() {
             clock.Text = "0";
 
             newList.ItemsSource = null;
@@ -98,47 +92,39 @@ namespace Proyect_1
             terminatedList.Items.Clear();
         }
 
-        private string errorCheck()
-        {
+        private string errorCheck() {
             bool isNumeric;
 
             isNumeric = int.TryParse(probability_text.Text, out probability);
-            if (!isNumeric && probability >= 0 && probability <= 100)
-            {
+            if (!isNumeric && probability >= 0 && probability <= 100) {
                 return "Please input integers in range only. (Parameters/Probability)";
             }
 
             isNumeric = int.TryParse(quantum_text.Text, out quantum);
-            if (!isNumeric && quantum > 0)
-            {
+            if (!isNumeric && quantum > 0) {
                 return "Please input positive integers only. (Parameters/Quantum)";
             }
 
             isNumeric = int.TryParse(newLimit_text.Text, out newLimit);
-            if (!isNumeric && newLimit > 0)
-            {
+            if (!isNumeric && newLimit > 0) {
                 return "Please input positive integers only. (List Limit/New)";
             }
 
             isNumeric = int.TryParse(readyLimit_text.Text, out readyLimit);
-            if (!isNumeric && readyLimit > 0)
-            {
+            if (!isNumeric && readyLimit > 0) {
                 return "Please input positive integers only. (List Limit/Ready)";
             }
 
             isNumeric = int.TryParse(waitingLimit_text.Text, out waitingLimit);
-            if (!isNumeric && waitingLimit > 0)
-            {
+            if (!isNumeric && waitingLimit > 0) {
                 return "Please input positive integers only. (List Limit/Waiting)";
             }
 
-            if (algSelected.SelectedItem.Equals(null))
-            {
+            if (algSelected.SelectedItem.Equals(null)) {
                 return "Please make a selection. (Parameters/Algorithm)";
             }
 
-            if (delaySelected.SelectedItem.Equals(null))
-            {
+            if (delaySelected.SelectedItem.Equals(null)) {
                 return "Please make a selection. (Parameters/Delay)";
             }
 
