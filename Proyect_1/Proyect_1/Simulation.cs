@@ -150,9 +150,6 @@ namespace Proyect_1 {
                 if (readyList.Count > 0) {
                     running = readyList.ElementAt(0);
                     readyList.RemoveAt(0);
-                    if (running.usesIO) {
-                        MessageBox.Show(running.id);
-                    }
                 }
             }
             //If somethign is running for the first time and it uses the IO, send it to the using IO

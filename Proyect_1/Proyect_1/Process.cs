@@ -28,7 +28,7 @@ namespace Proyect_1 {
             cpuTime = rand.Next(1, cpuUse - 1);
             curTime = 0;
 
-            if (rand.Next(0, 1) == 1) {
+            if (rand.NextDouble() > 0.5) {
                 usesIO = true;
             }
             else {
