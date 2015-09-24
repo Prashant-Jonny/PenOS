@@ -70,9 +70,15 @@ namespace Proyect_1 {
         }
 
         private void pcbButton_Click(object sender, RoutedEventArgs e) {
+            simul.pcbUpdate();
             if (!pcbOpen) {
+                try {
+                    pcb.Show();
+                }
+                catch (InvalidOperationException ex) {
+                    MessageBox.Show(ex.Message);
+                }
                 pcbOpen = true;
-                pcb.Show();
             }
             else {
                 MessageBox.Show("A PCB Window is already running");

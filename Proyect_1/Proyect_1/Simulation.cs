@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,15 +27,18 @@ namespace Proyect_1 {
         private string algorithm;
         private string delay;
 
-        private bool inUse = false;
-
         private Process running = null;
         private Process waiting = null;
 
-        private List<Process> newList = new List<Process>();
+        private ObservableCollection<Process> newList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> readyList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> waitingList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
+
+        /*private List<Process> newList = new List<Process>();
         private List<Process> readyList = new List<Process>();
         private List<Process> waitingList = new List<Process>();
-        private List<Process> terminatedList = new List<Process>();
+        private List<Process> terminatedList = new List<Process>();*/
 
         public static MainWindow mWindow;
         public static PCB pcb;
@@ -62,7 +66,7 @@ namespace Proyect_1 {
             clock = 0;
             Random rand = new Random();
 
-            while (!mWindow.stopped && !mWindow.paused && !mWindow.pcbOpen) {
+            while (!mWindow.stopped && !mWindow.paused) {
                 mWindow.clock.Text = clock.ToString();
 
                 if (running != null) {
@@ -78,11 +82,6 @@ namespace Proyect_1 {
                     mWindow.io.Text = "";
                 }
 
-                if (rand.Next(0, 100) <= probability && newList.Count() < newLimit) {
-                    Add(new Process(id));
-                    id++;
-                }
-
                 if (algorithm == "RR") {
                     roundRobin();
                 }
@@ -91,6 +90,11 @@ namespace Proyect_1 {
                 }
                 else {
                     MessageBox.Show("Algorithm error");
+                }
+
+                if (rand.Next(0, 100) <= probability && newList.Count() < newLimit) {
+                    Add(new Process(id));
+                    id++;
                 }
 
                 switch (delay) {
@@ -110,7 +114,7 @@ namespace Proyect_1 {
                         MessageBox.Show("Error in delay input: " + delay);
                         break;
                 }
-                pcbUpdate();
+                pcb.dataGrid.ItemsSource = terminatedList;
                 listUpdate();
                 clock++;
             }
@@ -195,15 +199,14 @@ namespace Proyect_1 {
             }
         }
 
-        private void pcbUpdate() {
-            pcb.dataGrid.ItemsSource = readyList;
+        private void listUpdate() {
+            mWindow.newList.ItemsSource = newList.Select(Process => Process.id);
+            mWindow.readyList.ItemsSource = readyList.Select(Process => Process.id);
+            mWindow.waitingList.ItemsSource = waitingList.Select(Process => Process.id);
+            mWindow.terminatedList.ItemsSource = terminatedList.Select(Process => Process.id);
         }
 
-        private void listUpdate() {
-            mWindow.newList.ItemsSource = newList.Select(Process => Process.id).ToList();
-            mWindow.readyList.ItemsSource = readyList.Select(Process => Process.id).ToList();
-            mWindow.waitingList.ItemsSource = waitingList.Select(Process => Process.id).ToList();
-            mWindow.terminatedList.ItemsSource = terminatedList.Select(Process => Process.id).ToList();
+        public void pcbUpdate() {
         }
     }
 }

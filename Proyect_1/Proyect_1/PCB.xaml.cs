@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +19,15 @@ namespace Proyect_1 {
     /// Interaction logic for PCB.xaml
     /// </summary>
     public partial class PCB : Window {
-        public Simulation simul;
 
         public PCB() {
             InitializeComponent();
-            Simulation.pcb = this;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            Simulation.mWindow.pcbOpen = false;
+            e.Cancel = true;
+            Visibility = Visibility.Hidden;
         }
     }
 }
