@@ -35,11 +35,6 @@ namespace Proyect_1 {
         private ObservableCollection<Process> waitingList = new ObservableCollection<Process>();
         private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
 
-        /*private List<Process> newList = new List<Process>();
-        private List<Process> readyList = new List<Process>();
-        private List<Process> waitingList = new List<Process>();
-        private List<Process> terminatedList = new List<Process>();*/
-
         public static MainWindow mWindow;
         public static PCB pcb;
 
