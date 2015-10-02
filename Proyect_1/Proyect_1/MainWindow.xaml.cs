@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,18 +20,17 @@ namespace Proyect_1 {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-
         //Values assigned by user
-        private int newLimit;
 
+        private int newLimit;
         private int readyLimit;
         private int waitingLimit;
         private int quantum;
         private int probability;
 
         //Values altered by buttons
-        public bool paused = false;
 
+        public bool paused = false;
         public bool stopped = false;
         public bool pcbOpen = false;
 
@@ -49,6 +49,9 @@ namespace Proyect_1 {
             if (!errorCheck().Equals("Passed")) {
                 MessageBox.Show(errorCheck());
             }
+            else if (paused) {
+                paused = false;
+            }
             else {
                 stopped = false;
                 paused = false;
@@ -61,8 +64,8 @@ namespace Proyect_1 {
 
         private void stopButton_Click(object sender, RoutedEventArgs e) {
             stopped = true;
-            simul = new Simulation();
-            resetValues();
+            /*simul = new Simulation();
+            resetValues();*/
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e) {
@@ -85,7 +88,7 @@ namespace Proyect_1 {
             }
         }
 
-        private void resetValues() {
+        public void resetValues() {
             clock.Text = "0";
 
             newList.ItemsSource = null;
@@ -96,6 +99,9 @@ namespace Proyect_1 {
             waitingList.Items.Clear();
             terminatedList.ItemsSource = null;
             terminatedList.Items.Clear();
+
+            running.Text = null;
+            io.Text = null;
         }
 
         private string errorCheck() {
@@ -135,6 +141,20 @@ namespace Proyect_1 {
             }
 
             return "Passed";
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            using (MemoryStream ms = new MemoryStream()) {
+                Properties.Resources.PenOS.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                ms.Position = 0;
+                BitmapImage bm = new BitmapImage();
+                bm.BeginInit();
+                bm.StreamSource = ms;
+                bm.CacheOption = BitmapCacheOption.OnLoad;
+                bm.EndInit();
+
+                image.Source = bm;
+            }
         }
     }
 }

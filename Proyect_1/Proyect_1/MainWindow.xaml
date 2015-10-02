@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Proyect_1"
         mc:Ignorable="d"
-        Title="NFNOS" Height="600" Width="475">
+        Title="PenOS" Height="600" Width="450"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded">
     <Grid Margin="0,0,-8,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="467*" />
@@ -22,9 +24,9 @@
         <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,123,0,0" />
         <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" />
         <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,256,0,0" />
-        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="176" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" />
+        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="259" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" Grid.RowSpan="2" />
         <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="337,64,0,0" />
-        <ListBox x:Name="waitingList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="337,90,0,0" />
+        <ListBox x:Name="waitingList" Height="110" VerticalAlignment="Top" Margin="337,90,0,0" HorizontalAlignment="Left" Width="75" />
         <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="29,217,0,0" Click="stopButton_Click" />
         <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="99,217,0,0" Click="playButton_Click" />
         <Button x:Name="pauseButton" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="169,217,0,0" Click="pauseButton_Click" />
@@ -60,5 +62,6 @@
             <TextBox x:Name="waitingLimit_text" Width="20" />
         </InlineUIContainer></TextBlock>
         <Button x:Name="pcbButton" Content="PCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,217,0,0" Click="pcbButton_Click" />
+        <Image x:Name="image" HorizontalAlignment="Left" Height="41" VerticalAlignment="Top" Width="298" Margin="114,10,0,0" />
     </Grid>
 </Window>

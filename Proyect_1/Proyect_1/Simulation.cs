@@ -61,7 +61,18 @@ namespace Proyect_1 {
             clock = 0;
             Random rand = new Random();
 
-            while (!mWindow.stopped && !mWindow.paused) {
+            while (true) {
+                if (mWindow.stopped || mWindow.paused) {
+                    await Task.Delay(1000);
+                    if (mWindow.stopped) {
+                        Stop();
+                        break;
+                    }
+                    else if (mWindow.paused) {
+                        continue;
+                    }
+                }
+
                 mWindow.clock.Text = clock.ToString();
 
                 if (running != null) {
@@ -87,7 +98,7 @@ namespace Proyect_1 {
                     MessageBox.Show("Algorithm error");
                 }
 
-                if (rand.Next(0, 100) <= probability && newList.Count() < newLimit) {
+                if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
                     Add(new Process(id));
                     id++;
                 }
@@ -113,6 +124,10 @@ namespace Proyect_1 {
                 listUpdate();
                 clock++;
             }
+        }
+
+        private void Stop() {
+            mWindow.resetValues();
         }
 
         private void fcfs() {
@@ -152,7 +167,7 @@ namespace Proyect_1 {
                 }
             }
             //If somethign is running for the first time and it uses the IO, send it to the using IO
-            else if (running.curTime == 0 && running.usesIO) {
+            else if (running.curTime == running.IO_initTime && running.usesIO) {
                 running.curTime++;
                 waitingList.Add(running);
                 running = null;
@@ -180,17 +195,22 @@ namespace Proyect_1 {
                 readyList.Add(newList.ElementAt(0));
                 newList.RemoveAt(0);
             }
+            //If something is not using the IO, and there is a waiting list, send it.
             if (waiting == null) {
                 if (waitingList.Count > 0) {
                     waiting = waitingList.ElementAt(0);
                     waitingList.RemoveAt(0);
-                    waiting.IO_initTime = clock;
                 }
             }
+            //Keep waiting until IO_curTime = IO_totalTime
             else {
-                waiting.IO_totalTime = clock - waiting.IO_initTime;
-                readyList.Add(waiting);
-                waiting = null;
+                if (waiting.IO_curTime == waiting.IO_totalTime) {
+                    readyList.Add(waiting);
+                    waiting = null;
+                }
+                else {
+                    waiting.IO_curTime++;
+                }
             }
         }
 

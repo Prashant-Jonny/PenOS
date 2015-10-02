@@ -15,6 +15,7 @@ namespace Proyect_1 {
         public int curTime { get; set; }
         public int IO_initTime { get; set; }
         public int IO_totalTime { get; set; }
+        public int IO_curTime { get; set; }
         public int endTime { get; set; }
 
         public bool usesIO { get; }
@@ -34,6 +35,10 @@ namespace Proyect_1 {
             else {
                 usesIO = false;
             }
+
+            IO_initTime = rand.Next(0, cpuTime);
+            IO_totalTime = cpuTime - IO_initTime;
+            IO_curTime = 0;
         }
     }
 }
