@@ -1,21 +1,25 @@
-﻿<Window x:Class="Proyect_1.PCB"
+﻿<Window x:Class="PenOS.PCB"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyect_1"
+        xmlns:local="clr-namespace:PenOS"
         mc:Ignorable="d"
         Title="PCB"
-        Closing="Window_Closing" Height="310" Width="510">
+        ResizeMode="NoResize"
+        Closing="Window_Closing"
+        Height="285" Width="633">
     <Grid>
-        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="250" Width="470" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False">
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="622" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding id, Mode=OneWay}" />
+                <DataGridTextColumn Header="Arrival Time" Binding="{Binding arrivalTime, Mode=OneWay}" />
                 <DataGridTextColumn Header="CPU Use" Binding="{Binding cpuUse, Mode=OneWay}" />
-                <DataGridTextColumn Header="CPU Time" Binding="{Binding cpuTime, Mode=OneWay}" />
+                <DataGridTextColumn Header="CPU Time" Binding="{Binding curTime, Mode=OneWay}" />
                 <DataGridTextColumn Header="I/O Initial Time" Binding="{Binding IO_initTime, Mode=OneWay}" />
                 <DataGridTextColumn Header="I/O Total Time" Binding="{Binding IO_totalTime, Mode=OneWay}" />
                 <DataGridTextColumn Header="End Time" Binding="{Binding endTime, Mode=OneWay}" />
+                <DataGridTextColumn Header="Wait Time" Binding="{Binding waitTime, Mode=OneWay}" />
                 <DataGridTextColumn Header="System End Time" Binding="{Binding sysEndTime, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Proyect_1 {
+namespace PenOS {
 
     public class Simulation {
         private int probability;
@@ -18,8 +16,10 @@ namespace Proyect_1 {
         //Main Window clock counter
         private int clock = 0;
 
-        //Process ID
+        //Process vars
         private int id = 0;
+
+        private int ioTime = 0;
 
         //Quantum timer
         private int quantumTimer = 0;
@@ -34,6 +34,7 @@ namespace Proyect_1 {
         private ObservableCollection<Process> readyList = new ObservableCollection<Process>();
         private ObservableCollection<Process> waitingList = new ObservableCollection<Process>();
         private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> fullList = new ObservableCollection<Process>();
 
         public static MainWindow mWindow;
         public static PCB pcb;
@@ -41,12 +42,14 @@ namespace Proyect_1 {
         public Simulation() {
         }
 
-        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected) {
+        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected, int ioTime) {
             this.probability = probability;
             this.quantum = quantum;
             this.newLimit = newLimit;
             this.readyLimit = readyLimit;
             this.waitingLimit = waitingLimit;
+
+            this.ioTime = ioTime;
 
             algorithm = algSelected;
             delay = delaySelected;
@@ -69,6 +72,7 @@ namespace Proyect_1 {
                         break;
                     }
                     else if (mWindow.paused) {
+                        changeValues();
                         continue;
                     }
                 }
@@ -99,7 +103,7 @@ namespace Proyect_1 {
                 }
 
                 if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
-                    Add(new Process(id));
+                    Add(new Process(id, ioTime, clock));
                     id++;
                 }
 
@@ -120,9 +124,24 @@ namespace Proyect_1 {
                         MessageBox.Show("Error in delay input: " + delay);
                         break;
                 }
-                pcb.dataGrid.ItemsSource = terminatedList;
                 listUpdate();
+                pcb.dataGrid.ItemsSource = fullList;
                 clock++;
+            }
+        }
+
+        private void changeValues() {
+            if (mWindow.errorCheck().Equals("Passed")) {
+                int.TryParse(mWindow.probability_text.Text, out probability);
+                int.TryParse(mWindow.probability_text.Text, out probability);
+                int.TryParse(mWindow.quantum_text.Text, out quantum);
+                int.TryParse(mWindow.newLimit_text.Text, out newLimit);
+                int.TryParse(mWindow.readyLimit_text.Text, out readyLimit);
+                int.TryParse(mWindow.waitingLimit_text.Text, out waitingLimit);
+                int.TryParse(mWindow.ioUse.Text, out ioTime);
+
+                algorithm = mWindow.algSelected.Text;
+                delay = mWindow.delaySelected.Text;
             }
         }
 
@@ -140,14 +159,16 @@ namespace Proyect_1 {
             }
             //If somethign is running, add a 1 to current time running, if its over then send it home
             else {
-                if (running.cpuTime < running.curTime) {
+                if (running.cpuUse < running.curTime) {
                     running.curTime++;
                 }
                 else {
                     running.IO_initTime = 0;
                     running.IO_totalTime = 0;
                     running.endTime = clock;
-                    running.sysEndTime = DateTime.Now.ToString("h:mm:ss tt");
+                    running.sysEndTime = running.endTime - running.arrivalTime + 1;
+                    running.waitTime = running.sysEndTime - running.cpuUse - running.IO_initTime;
+                    //running.curTime = running.cpuTi;
                     terminatedList.Add(running);
                     running = null;
                 }
@@ -159,6 +180,23 @@ namespace Proyect_1 {
         }
 
         private void roundRobin() {
+            //If something is not using the IO, and there is a waiting list, send it.
+            if (waiting == null) {
+                if (waitingList.Count > 0) {
+                    waiting = waitingList.ElementAt(0);
+                    waitingList.RemoveAt(0);
+                }
+            }
+            //Keep waiting until IO_curTime = IO_totalTime
+            else {
+                if (waiting.IO_curTime == waiting.IO_totalTime) {
+                    readyList.Add(waiting);
+                    waiting = null;
+                }
+                else {
+                    waiting.IO_curTime++;
+                }
+            }
             //If nothing is running and there is something ready, send it over.
             if (running == null) {
                 if (readyList.Count > 0) {
@@ -180,7 +218,8 @@ namespace Proyect_1 {
                     }
                     else {
                         running.endTime = clock;
-                        running.sysEndTime = DateTime.Now.ToString("h:mm:ss tt");
+                        running.sysEndTime = running.endTime - running.arrivalTime + 1;
+                        running.waitTime = running.sysEndTime - running.cpuUse - running.IO_initTime;
                         terminatedList.Add(running);
                         running = null;
                     }
@@ -195,23 +234,6 @@ namespace Proyect_1 {
                 readyList.Add(newList.ElementAt(0));
                 newList.RemoveAt(0);
             }
-            //If something is not using the IO, and there is a waiting list, send it.
-            if (waiting == null) {
-                if (waitingList.Count > 0) {
-                    waiting = waitingList.ElementAt(0);
-                    waitingList.RemoveAt(0);
-                }
-            }
-            //Keep waiting until IO_curTime = IO_totalTime
-            else {
-                if (waiting.IO_curTime == waiting.IO_totalTime) {
-                    readyList.Add(waiting);
-                    waiting = null;
-                }
-                else {
-                    waiting.IO_curTime++;
-                }
-            }
         }
 
         private void listUpdate() {
@@ -219,9 +241,23 @@ namespace Proyect_1 {
             mWindow.readyList.ItemsSource = readyList.Select(Process => Process.id);
             mWindow.waitingList.ItemsSource = waitingList.Select(Process => Process.id);
             mWindow.terminatedList.ItemsSource = terminatedList.Select(Process => Process.id);
-        }
 
-        public void pcbUpdate() {
+            fullList = new ObservableCollection<Process>();
+            fullList = new ObservableCollection<Process>(fullList.Concat(newList));
+            fullList = new ObservableCollection<Process>(fullList.Concat(readyList));
+            fullList = new ObservableCollection<Process>(fullList.Concat(waitingList));
+            fullList = new ObservableCollection<Process>(fullList.Concat(terminatedList));
+
+            if (running != null)
+                fullList.Add(running);
+            if (waiting != null)
+                fullList.Add(waiting);
+
+            try {
+                fullList = new ObservableCollection<Process>(fullList.OrderBy(Process => Process.realID));
+            }
+            catch {
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proyect_1", "Proyect_1\Proyect_1.csproj", "{4069EB9F-0FFF-4390-AFE3-3615195B3E3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenOS", "PenOS\PenOS.csproj", "{4069EB9F-0FFF-4390-AFE3-3615195B3E3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

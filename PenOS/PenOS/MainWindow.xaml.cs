@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace Proyect_1 {
+namespace PenOS {
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,6 +16,7 @@ namespace Proyect_1 {
         private int waitingLimit;
         private int quantum;
         private int probability;
+        private int ioTime;
 
         //Values altered by buttons
 
@@ -57,15 +47,13 @@ namespace Proyect_1 {
                 paused = false;
                 resetValues();
 
-                simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.Text, delaySelected.Text);
+                simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.Text, delaySelected.Text, ioTime);
                 simul.Start();
             }
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e) {
             stopped = true;
-            /*simul = new Simulation();
-            resetValues();*/
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e) {
@@ -73,7 +61,6 @@ namespace Proyect_1 {
         }
 
         private void pcbButton_Click(object sender, RoutedEventArgs e) {
-            simul.pcbUpdate();
             if (!pcbOpen) {
                 try {
                     pcb.Show();
@@ -104,7 +91,7 @@ namespace Proyect_1 {
             io.Text = null;
         }
 
-        private string errorCheck() {
+        public string errorCheck() {
             bool isNumeric;
 
             isNumeric = int.TryParse(probability_text.Text, out probability);
@@ -115,6 +102,11 @@ namespace Proyect_1 {
             isNumeric = int.TryParse(quantum_text.Text, out quantum);
             if (!isNumeric && quantum > 0) {
                 return "Please input positive integers only. (Parameters/Quantum)";
+            }
+
+            isNumeric = int.TryParse(ioUse.Text, out ioTime);
+            if (!isNumeric && ioTime > 0) {
+                return "Please input positive integers only. (Parameters/IO Response Time)";
             }
 
             isNumeric = int.TryParse(newLimit_text.Text, out newLimit);

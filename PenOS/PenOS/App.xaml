@@ -1,9 +1,8 @@
-﻿<Application x:Class="Proyect_1.App"
+﻿<Application x:Class="PenOS.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Proyect_1"
+             xmlns:local="clr-namespace:PenOS"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>
