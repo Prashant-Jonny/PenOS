@@ -124,11 +124,11 @@ namespace PenOS {
                 return "Please input positive integers only. (List Limit/Waiting)";
             }
 
-            if (algSelected.SelectedItem.Equals(null)) {
+            if (algSelected.SelectedItem == null) {
                 return "Please make a selection. (Parameters/Algorithm)";
             }
 
-            if (delaySelected.SelectedItem.Equals(null)) {
+            if (delaySelected.SelectedItem == null) {
                 return "Please make a selection. (Parameters/Delay)";
             }
 
@@ -147,6 +147,10 @@ namespace PenOS {
 
                 image.Source = bm;
             }
+        }
+
+        private void help_Click(object sender, RoutedEventArgs e) {
+            MessageBox.Show("Hover over the elements to see their function");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace PenOS {
             realID = id;
             arrivalTime = clock;
 
-            cpuUse = rand.Next(2, 10);
+            cpuUse = rand.Next(2, 15);
             cpuTime = rand.Next(1, cpuUse - 1);
             curTime = 0;
 

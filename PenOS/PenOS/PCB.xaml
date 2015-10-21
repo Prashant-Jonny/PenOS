@@ -10,17 +10,71 @@
         Closing="Window_Closing"
         Height="285" Width="633">
     <Grid>
-        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="622" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False">
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="622" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" CanUserSortColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding id, Mode=OneWay}" />
-                <DataGridTextColumn Header="Arrival Time" Binding="{Binding arrivalTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="CPU Use" Binding="{Binding cpuUse, Mode=OneWay}" />
-                <DataGridTextColumn Header="CPU Time" Binding="{Binding curTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="I/O Initial Time" Binding="{Binding IO_initTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="I/O Total Time" Binding="{Binding IO_totalTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="End Time" Binding="{Binding endTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="Wait Time" Binding="{Binding waitTime, Mode=OneWay}" />
-                <DataGridTextColumn Header="System End Time" Binding="{Binding sysEndTime, Mode=OneWay}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding id, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Process ID" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Arrival Time" Binding="{Binding arrivalTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Arrival cicle of the process" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="CPU Use" Binding="{Binding cpuUse, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles needed for the process to complete" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="CPU Time" Binding="{Binding curTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Current cicles" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="I/O Initial Time" Binding="{Binding IO_initTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle at which the process will need for the I/O" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="I/O Total Time" Binding="{Binding IO_totalTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles needed to wait for I/O to respond" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="End Time" Binding="{Binding endTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle in which the process ends (If it is 0 along with Wait Time and System End Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Wait Time" Binding="{Binding waitTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles the process waits to use the I/O (If it is 0 along with End Time and System End Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="System End Time" Binding="{Binding sysEndTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle in which the process ends according to the system (If it is 0 along with End Time and Wait Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -62,5 +62,6 @@
         </InlineUIContainer></TextBlock>
         <Button x:Name="pcbButton" Content="PCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,217,0,0" Click="pcbButton_Click" ToolTip="Opens the PCB Window, only one windows is allowed to be open at a time." />
         <Image x:Name="image" HorizontalAlignment="Left" Height="41" VerticalAlignment="Top" Width="298" Margin="114,10,0,0" ToolTip="PenOS, definitely not a penis joke." />
+        <Button x:Name="help" Content="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,541,0,0" Click="help_Click" />
     </Grid>
 </Window>

@@ -159,16 +159,15 @@ namespace PenOS {
             }
             //If somethign is running, add a 1 to current time running, if its over then send it home
             else {
-                if (running.cpuUse < running.curTime) {
+                if (running.cpuUse > running.curTime) {
                     running.curTime++;
                 }
                 else {
+                    running.endTime = clock;
                     running.IO_initTime = 0;
                     running.IO_totalTime = 0;
-                    running.endTime = clock;
                     running.sysEndTime = running.endTime - running.arrivalTime + 1;
-                    running.waitTime = running.sysEndTime - running.cpuUse - running.IO_initTime;
-                    //running.curTime = running.cpuTi;
+                    running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
                     terminatedList.Add(running);
                     running = null;
                 }
@@ -189,8 +188,13 @@ namespace PenOS {
             }
             //Keep waiting until IO_curTime = IO_totalTime
             else {
-                if (waiting.IO_curTime == waiting.IO_totalTime) {
-                    readyList.Add(waiting);
+                if (waiting.IO_curTime >= waiting.IO_totalTime) {
+                    if (waiting.cpuUse == waiting.curTime) {
+                        terminatedList.Add(waiting);
+                    }
+                    else {
+                        readyList.Add(waiting);
+                    }
                     waiting = null;
                 }
                 else {
@@ -213,13 +217,13 @@ namespace PenOS {
             //If the timer is still not the quantum, keep adding some cycles until its finished.
             else {
                 if (quantumTimer < quantum) {
-                    if (running.curTime < running.cpuTime) {
+                    if (running.curTime < running.cpuUse) {
                         running.curTime++;
                     }
                     else {
                         running.endTime = clock;
                         running.sysEndTime = running.endTime - running.arrivalTime + 1;
-                        running.waitTime = running.sysEndTime - running.cpuUse - running.IO_initTime;
+                        running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
                         terminatedList.Add(running);
                         running = null;
                     }
@@ -227,6 +231,7 @@ namespace PenOS {
                 else {
                     readyList.Add(running);
                     running = null;
+                    //quantumTimer = 0;
                 }
             }
             //FCFS from new to ready
