@@ -37,7 +37,7 @@ namespace PenOS {
         private ObservableCollection<Process> fullList = new ObservableCollection<Process>();
 
         public static MainWindow mWindow;
-        public static PCB pcb;
+        public static Settings settings;
 
         public Simulation() {
         }
@@ -125,23 +125,24 @@ namespace PenOS {
                         break;
                 }
                 listUpdate();
-                pcb.dataGrid.ItemsSource = fullList;
+                mWindow.dataGrid.ItemsSource = fullList;
                 clock++;
             }
         }
 
         private void changeValues() {
-            if (mWindow.errorCheck().Equals("Passed")) {
-                int.TryParse(mWindow.probability_text.Text, out probability);
-                int.TryParse(mWindow.probability_text.Text, out probability);
-                int.TryParse(mWindow.quantum_text.Text, out quantum);
-                int.TryParse(mWindow.newLimit_text.Text, out newLimit);
-                int.TryParse(mWindow.readyLimit_text.Text, out readyLimit);
-                int.TryParse(mWindow.waitingLimit_text.Text, out waitingLimit);
-                int.TryParse(mWindow.ioUse.Text, out ioTime);
-
-                algorithm = mWindow.algSelected.Text;
-                delay = mWindow.delaySelected.Text;
+            if (settings.errorCheck().Equals("Passed")) {
+                probability = settings.probability;
+                quantum = settings.quantum;
+                newLimit = settings.newLimit;
+                readyLimit = settings.readyLimit;
+                waitingLimit = settings.waitingLimit;
+                ioTime = settings.ioTime;
+                algorithm = settings.algorithm;
+                delay = settings.delay;
+            }
+            else {
+                MessageBox.Show(settings.errorCheck());
             }
         }
 

@@ -5,63 +5,106 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PenOS"
         mc:Ignorable="d"
-        Title="PenOS" Height="610" Width="450"
+        Title="PenOS" Height="430" Width="960"
         ResizeMode="NoResize"
         Loaded="Window_Loaded">
     <Grid>
-        <Label  Content="Clock" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" ToolTip="Tick" />
-        <TextBlock x:Name="clock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding }" VerticalAlignment="Top" Margin="10,35,0,0" Width="39" ToolTip="Tock" />
-        <Label Content="Hold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="47,64,0,0" ToolTip="Holda amigos." />
-        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="47,90,0,0" ToolTip="They are waiting to be ready I guess?" />
-        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="139,64,0,0" ToolTip="Ready label here." />
-        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="139,90,0,0" ToolTip="Ready boys" />
-        <Label Content="Running" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,64,0,0" ToolTip="Run Forrest, run!" />
-        <TextBlock x:Name="running" HorizontalAlignment="Left" Margin="250,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" ToolTip="Process currently running." />
-        <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,123,0,0" ToolTip="No funny text here." />
-        <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" ToolTip="Process currently using IO." />
-        <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,256,0,0" ToolTip="Processes that have ended." />
-        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="280" VerticalAlignment="Top" Width="75" Margin="250,281,0,0" Grid.RowSpan="2" ToolTip="They are in a better place now." />
-        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="337,64,0,0" ToolTip="Processes waiting for IO time." />
-        <ListBox x:Name="waitingList" Height="110" VerticalAlignment="Top" Margin="337,90,0,0" HorizontalAlignment="Left" Width="75" ToolTip="They are still waiting." />
-        <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="29,217,0,0" Click="stopButton_Click" ToolTip="Stops the simulation and resets the values on the list." />
-        <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="99,217,0,0" Click="playButton_Click" ToolTip="Starts or resumes the simulation using the assigned parameters." />
-        <Button x:Name="pauseButton" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="169,217,0,0" Click="pauseButton_Click" ToolTip="Pauses the simulation and allows for a change in the parameters." />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Parameters" VerticalAlignment="Top" Margin="97,256,0,0" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,281,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " ToolTip="The chance of a new process being randomnly created." /><InlineUIContainer>
-        		<TextBox x:Name="probability_text" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
-        	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,326,0,0"><Run Text="Select an algorithm    " ToolTip="Algorithm used to handle the process simulation." /><InlineUIContainer>
-            <ComboBox x:Name="algSelected" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <ComboBoxItem Content="RR" />
-                <ComboBoxItem Content="FCFS" />
-            </ComboBox>
-            </InlineUIContainer></TextBlock>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="310" Margin="17,251,0,0" VerticalAlignment="Top" Width="215" />
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,356,0,0"><Run Text="Quantum (Seconds)   " ToolTip="Time allowed to be in the Running state, used only for Round Robin algorithm." /><InlineUIContainer>
-            <TextBox x:Name="quantum_text" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
-        </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,386,0,0" ><Run Text="Delay     " ToolTip="Delay for better appreciation of the simulation." /><InlineUIContainer>
-        		<ComboBox x:Name="delaySelected">
-                    <ComboBoxItem Content="Slow (2s)" />
-                    <ComboBoxItem Content="Medium (1s)" />
-                    <ComboBoxItem Content="Fast (0.5s)" />
-                </ComboBox>
-        	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,416,0,0"><Run Text="I/O Response Time (Seconds)   " ToolTip="Time that the process takes to be noticed by the IO." /><InlineUIContainer>
-            <TextBox x:Name="ioUse" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
-        </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="97,446,0,0"><Run Text="List Limits" /></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,472,0,0" Grid.RowSpan="2"><Run Text="Hold               " ToolTip="Limit of the Hold list." /><InlineUIContainer>
-        		<TextBox x:Name="newLimit_text" Width="20" />
-        	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,497,0,0" ><Run Text="Ready             " ToolTip="Limit of the Ready list." /><InlineUIContainer>
-            <TextBox x:Name="readyLimit_text" Width="20" />
-        </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="29,522,0,0" ><Run Text="Waiting I/O     " ToolTip="Limit of the Waiting list." /><InlineUIContainer>
-            <TextBox x:Name="waitingLimit_text" Width="20" />
-        </InlineUIContainer></TextBlock>
-        <Button x:Name="pcbButton" Content="PCB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,217,0,0" Click="pcbButton_Click" ToolTip="Opens the PCB Window, only one windows is allowed to be open at a time." />
-        <Image x:Name="image" HorizontalAlignment="Left" Height="41" VerticalAlignment="Top" Width="298" Margin="114,10,0,0" ToolTip="PenOS, definitely not a penis joke." />
-        <Button x:Name="help" Content="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="337,541,0,0" Click="help_Click" />
+        <Image x:Name="image" HorizontalAlignment="Left" Height="41" VerticalAlignment="Top" Width="298" Margin="633,10,0,0" ToolTip="PenOS, definitely not a penis joke." />
+
+        <Label  Content="Clock" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Tick" Margin="37,10,0,0" />
+        <TextBlock x:Name="clock" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="39" ToolTip="Tock" Margin="37,35,0,0" />
+
+        <Label Content="Hold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,60,0,0" ToolTip="Holda amigos." />
+        <ListBox x:Name="newList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="37,91,0,0" ToolTip="They are waiting to be ready I guess?" />
+
+        <Label Content="Ready" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="37,225,0,0" ToolTip="Ready label here." Grid.RowSpan="2" />
+        <ListBox x:Name="readyList" HorizontalAlignment="Left" Height="110" VerticalAlignment="Top" Width="75" Margin="37,256,0,0" ToolTip="Ready boys" />
+
+        <Label Content="Terminated" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="137,225,0,0" ToolTip="Processes that have ended." Grid.RowSpan="2" />
+        <ListBox x:Name="terminatedList" HorizontalAlignment="Left" Height="111" VerticalAlignment="Top" Width="75" Margin="137,256,0,0" ToolTip="They are in a better place now." />
+
+        <Label Content="Waiting" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="137,60,0,0" ToolTip="Processes waiting for IO time." />
+        <ListBox x:Name="waitingList" Height="110" VerticalAlignment="Top" Margin="137,91,0,0" HorizontalAlignment="Left" Width="75" ToolTip="They are still waiting." />
+
+        <Label Content="Running" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="137,10,0,0" ToolTip="Run Forrest, run!" />
+        <TextBlock x:Name="running" HorizontalAlignment="Left" Margin="137,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" ToolTip="Process currently running." />
+
+        <Label Content="Using I/O" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,10,0,0" ToolTip="No funny text here." />
+        <TextBlock x:Name="io" HorizontalAlignment="Left" Margin="250,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" ToolTip="Process currently using IO." />
+
+        <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="250,71,0,0" Click="playButton_Click" ToolTip="Starts or resumes the simulation using the assigned parameters." />
+        <Button x:Name="pauseButton" Content="Pause" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="250,111,0,0" Click="pauseButton_Click" ToolTip="Pauses the simulation and allows for a change in the parameters." />
+        <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="250,151,0,0" Click="stopButton_Click" ToolTip="Stops the simulation and resets the values on the list." />
+        <Button x:Name="settings_button" Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="250,191,0,0" Click="settings_Click" />
+        <Button x:Name="vm" Content="VM" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,231,0,0" Width="50" />
+        <Button x:Name="help" Content="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="250,346,0,0" Click="help_Click" />
+
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="296" Width="616" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" CanUserSortColumns="False" Margin="315,71,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding id, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Process ID" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Arrival Time" Binding="{Binding arrivalTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Arrival cicle of the process" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="CPU Use" Binding="{Binding cpuUse, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles needed for the process to complete" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="CPU Time" Binding="{Binding curTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Current cicles" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="I/O Initial Time" Binding="{Binding IO_initTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle at which the process will need for the I/O" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="I/O Total Time" Binding="{Binding IO_totalTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles needed to wait for I/O to respond" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="End Time" Binding="{Binding endTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle in which the process ends (If it is 0 along with Wait Time and System End Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Wait Time" Binding="{Binding waitTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicles the process waits to use the I/O (If it is 0 along with End Time and System End Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="System End Time" Binding="{Binding sysEndTime, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Cicle in which the process ends according to the system (If it is 0 along with End Time and Wait Time, it ended in error)" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

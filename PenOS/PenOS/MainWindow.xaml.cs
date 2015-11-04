@@ -9,35 +9,26 @@ namespace PenOS {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        //Values assigned by user
-
-        private int newLimit;
-        private int readyLimit;
-        private int waitingLimit;
-        private int quantum;
-        private int probability;
-        private int ioTime;
-
         //Values altered by buttons
 
         public bool paused = false;
         public bool stopped = false;
-        public bool pcbOpen = false;
+        public static bool settingsOpen = false;
 
         public bool simulStarted = false;
 
         private Simulation simul = new Simulation();
-        private PCB pcb = new PCB();
+        private Settings settings = new Settings();
 
         public MainWindow() {
             InitializeComponent();
             Simulation.mWindow = this;
-            Simulation.pcb = pcb;
+            Simulation.settings = settings;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e) {
-            if (!errorCheck().Equals("Passed")) {
-                MessageBox.Show(errorCheck());
+            if (!settings.errorCheck().Equals("Passed")) {
+                MessageBox.Show(settings.errorCheck());
             }
             else if (paused) {
                 paused = false;
@@ -47,7 +38,7 @@ namespace PenOS {
                 paused = false;
                 resetValues();
 
-                simul = new Simulation(probability, quantum, newLimit, readyLimit, waitingLimit, algSelected.Text, delaySelected.Text, ioTime);
+                simul = new Simulation(settings.probability, settings.quantum, settings.newLimit, settings.readyLimit, settings.waitingLimit, settings.algorithm, settings.delay, settings.ioTime);
                 simul.Start();
             }
         }
@@ -58,21 +49,6 @@ namespace PenOS {
 
         private void pauseButton_Click(object sender, RoutedEventArgs e) {
             paused = true;
-        }
-
-        private void pcbButton_Click(object sender, RoutedEventArgs e) {
-            if (!pcbOpen) {
-                try {
-                    pcb.Show();
-                }
-                catch (InvalidOperationException ex) {
-                    MessageBox.Show(ex.Message);
-                }
-                pcbOpen = true;
-            }
-            else {
-                MessageBox.Show("A PCB Window is already running");
-            }
         }
 
         public void resetValues() {
@@ -91,50 +67,6 @@ namespace PenOS {
             io.Text = null;
         }
 
-        public string errorCheck() {
-            bool isNumeric;
-
-            isNumeric = int.TryParse(probability_text.Text, out probability);
-            if (!isNumeric && probability >= 0 && probability <= 100) {
-                return "Please input integers in range only. (Parameters/Probability)";
-            }
-
-            isNumeric = int.TryParse(quantum_text.Text, out quantum);
-            if (!isNumeric && quantum > 0) {
-                return "Please input positive integers only. (Parameters/Quantum)";
-            }
-
-            isNumeric = int.TryParse(ioUse.Text, out ioTime);
-            if (!isNumeric && ioTime > 0) {
-                return "Please input positive integers only. (Parameters/IO Response Time)";
-            }
-
-            isNumeric = int.TryParse(newLimit_text.Text, out newLimit);
-            if (!isNumeric && newLimit > 0) {
-                return "Please input positive integers only. (List Limit/New)";
-            }
-
-            isNumeric = int.TryParse(readyLimit_text.Text, out readyLimit);
-            if (!isNumeric && readyLimit > 0) {
-                return "Please input positive integers only. (List Limit/Ready)";
-            }
-
-            isNumeric = int.TryParse(waitingLimit_text.Text, out waitingLimit);
-            if (!isNumeric && waitingLimit > 0) {
-                return "Please input positive integers only. (List Limit/Waiting)";
-            }
-
-            if (algSelected.SelectedItem == null) {
-                return "Please make a selection. (Parameters/Algorithm)";
-            }
-
-            if (delaySelected.SelectedItem == null) {
-                return "Please make a selection. (Parameters/Delay)";
-            }
-
-            return "Passed";
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             using (MemoryStream ms = new MemoryStream()) {
                 Properties.Resources.PenOS.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
@@ -151,6 +83,21 @@ namespace PenOS {
 
         private void help_Click(object sender, RoutedEventArgs e) {
             MessageBox.Show("Hover over the elements to see their function");
+        }
+
+        private void settings_Click(object sender, RoutedEventArgs e) {
+            if (!settingsOpen) {
+                try {
+                    settings.Show();
+                }
+                catch (InvalidOperationException ex) {
+                    MessageBox.Show(ex.Message);
+                }
+                settingsOpen = true;
+            }
+            else {
+                MessageBox.Show("A settings window is already running");
+            }
         }
     }
 }
