@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PenOS"
         mc:Ignorable="d"
-        Closed="Window_Closed"
+        Closing="Window_Closing"
         Title="Settings" Height="350" Width="230">
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,27,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " ToolTip="The chance of a new process being randomnly created." /><InlineUIContainer>
         		<TextBox x:Name="probability_text" Text="50" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
         	</InlineUIContainer></TextBlock>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,72,0,0"><Run Text="Select an algorithm    " ToolTip="Algorithm used to handle the process simulation." /><InlineUIContainer>
-            <ComboBox x:Name="algSelected" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ComboBox x:Name="algSelected" SelectedIndex="0"  HorizontalAlignment="Left" VerticalAlignment="Top">
                 <ComboBoxItem Content="RR" />
                 <ComboBoxItem Content="FCFS" />
             </ComboBox>
@@ -21,7 +21,7 @@
             <TextBox x:Name="quantum_text" Text="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
         </InlineUIContainer></TextBlock>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,132,0,0" ><Run Text="Delay     " ToolTip="Delay for better appreciation of the simulation." /><InlineUIContainer>
-        		<ComboBox x:Name="delaySelected" Text="Medium (1s)">
+        		<ComboBox x:Name="delaySelected" SelectedIndex="1"  Text="Medium (1s)">
                     <ComboBoxItem Content="Slow (2s)" />
                     <ComboBoxItem Content="Medium (1s)" />
                     <ComboBoxItem Content="Fast (0.5s)" />

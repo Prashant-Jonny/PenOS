@@ -5,17 +5,21 @@ namespace PenOS {
     public class Process {
         public string id { get; set; }
 
-        public int sysEndTime { get; set; }
-        public int waitTime { get; set; }
         public int realID { get; set; }
+        public int size { get; set; }
+        public int frames { get; set; }
+        public int arrivalTime { get; set; }
         public int cpuUse { get; }
         public int cpuTime { get; }
         public int curTime { get; set; }
         public int IO_initTime { get; set; }
         public int IO_totalTime { get; set; }
         public int IO_curTime { get; set; }
-        public int arrivalTime { get; set; }
         public int endTime { get; set; }
+        public int waitTime { get; set; }
+        public int sysEndTime { get; set; }
+
+        public string status { get; set; }
 
         public bool usesIO { get; }
 
@@ -46,6 +50,8 @@ namespace PenOS {
 
             IO_totalTime = ioTime;
             IO_curTime = 0;
+
+            status = "Hold";
         }
     }
 }

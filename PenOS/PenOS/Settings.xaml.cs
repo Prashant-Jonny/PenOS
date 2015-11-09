@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace PenOS {
 
@@ -65,20 +53,29 @@ namespace PenOS {
             }
 
             if (algSelected.SelectedItem == null) {
-                algorithm = algSelected.Text;
                 return "Please make a selection. (Parameters/Algorithm)";
+            }
+            else {
+                algorithm = algSelected.Text;
             }
 
             if (delaySelected.SelectedItem == null) {
-                delay = delaySelected.Text;
                 return "Please make a selection. (Parameters/Delay)";
+            }
+            else {
+                delay = delaySelected.Text;
             }
 
             return "Passed";
         }
 
-        private void Window_Closed(object sender, EventArgs e) {
-            MainWindow.settingsOpen = true;
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            MainWindow.settingsOpen = false;
+            if (!errorCheck().Equals("Passed")) {
+                MessageBox.Show("Error in one of the values");
+            }
+            e.Cancel = true;
+            Visibility = Visibility.Hidden;
         }
     }
 }

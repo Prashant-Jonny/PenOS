@@ -99,7 +99,8 @@ namespace PenOS {
                     fcfs();
                 }
                 else {
-                    MessageBox.Show("Algorithm error");
+                    MessageBox.Show("Algorithm error" + algorithm);
+                    break;
                 }
 
                 if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
@@ -155,6 +156,7 @@ namespace PenOS {
             if (running == null) {
                 if (readyList.Count > 0) {
                     running = readyList.ElementAt(0);
+                    running.status = "Running";
                     readyList.RemoveAt(0);
                 }
             }
@@ -169,11 +171,13 @@ namespace PenOS {
                     running.IO_totalTime = 0;
                     running.sysEndTime = running.endTime - running.arrivalTime + 1;
                     running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
+                    running.status = "Terminated";
                     terminatedList.Add(running);
                     running = null;
                 }
             }
             if (newList.Count > 0 && readyList.Count < readyLimit) {
+                newList.ElementAt(0).status = "Ready";
                 readyList.Add(newList.ElementAt(0));
                 newList.RemoveAt(0);
             }
@@ -184,6 +188,7 @@ namespace PenOS {
             if (waiting == null) {
                 if (waitingList.Count > 0) {
                     waiting = waitingList.ElementAt(0);
+                    waiting.status = "Using I/O";
                     waitingList.RemoveAt(0);
                 }
             }
@@ -191,9 +196,11 @@ namespace PenOS {
             else {
                 if (waiting.IO_curTime >= waiting.IO_totalTime) {
                     if (waiting.cpuUse == waiting.curTime) {
+                        waiting.status = "Terminated";
                         terminatedList.Add(waiting);
                     }
                     else {
+                        waiting.status = "Ready";
                         readyList.Add(waiting);
                     }
                     waiting = null;
@@ -206,12 +213,14 @@ namespace PenOS {
             if (running == null) {
                 if (readyList.Count > 0) {
                     running = readyList.ElementAt(0);
+                    running.status = "Running";
                     readyList.RemoveAt(0);
                 }
             }
             //If somethign is running for the first time and it uses the IO, send it to the using IO
             else if (running.curTime == running.IO_initTime && running.usesIO) {
                 running.curTime++;
+                running.status = "Waiting for I/O";
                 waitingList.Add(running);
                 running = null;
             }
@@ -225,18 +234,20 @@ namespace PenOS {
                         running.endTime = clock;
                         running.sysEndTime = running.endTime - running.arrivalTime + 1;
                         running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
+                        running.status = "Terminated";
                         terminatedList.Add(running);
                         running = null;
                     }
                 }
                 else {
+                    running.status = "Ready";
                     readyList.Add(running);
                     running = null;
-                    //quantumTimer = 0;
                 }
             }
             //FCFS from new to ready
             if (newList.Count > 0 && readyList.Count < readyLimit) {
+                newList.ElementAt(0).status = "Ready";
                 readyList.Add(newList.ElementAt(0));
                 newList.RemoveAt(0);
             }
@@ -263,6 +274,7 @@ namespace PenOS {
                 fullList = new ObservableCollection<Process>(fullList.OrderBy(Process => Process.realID));
             }
             catch {
+                MessageBox.Show("Wow you managed to fuck it up");
             }
         }
     }
