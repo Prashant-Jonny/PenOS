@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace PenOS {
 
@@ -12,6 +17,9 @@ namespace PenOS {
         private int newLimit;
         private int readyLimit;
         private int waitingLimit;
+
+        private int ram;
+        private int frames;
 
         //Main Window clock counter
         private int clock = 0;
@@ -29,20 +37,30 @@ namespace PenOS {
 
         private Process running = null;
         private Process waiting = null;
+        private Process usingDisk = null;
 
         private ObservableCollection<Process> newList = new ObservableCollection<Process>();
         private ObservableCollection<Process> readyList = new ObservableCollection<Process>();
         private ObservableCollection<Process> waitingList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> waitingDiskList = new ObservableCollection<Process>();
         private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
         private ObservableCollection<Process> fullList = new ObservableCollection<Process>();
+        private ObservableCollection<Process> tapList = new ObservableCollection<Process>();
+
+        private Frame[] Pages;
 
         public static MainWindow mWindow;
         public static Settings settings;
 
+        //Module II
+        private int diskTime = 0;
+
+        private int sysMemory = 0;
+
         public Simulation() {
         }
 
-        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected, int ioTime) {
+        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected, int ioTime, int ram, int frames, int diskTime) {
             this.probability = probability;
             this.quantum = quantum;
             this.newLimit = newLimit;
@@ -50,9 +68,17 @@ namespace PenOS {
             this.waitingLimit = waitingLimit;
 
             this.ioTime = ioTime;
+            this.diskTime = diskTime;
 
             algorithm = algSelected;
             delay = delaySelected;
+
+            this.ram = ram;
+            this.frames = frames;
+
+            sysMemory = (ram + 3) / 4;
+
+            Pages = new Frame[(ram - sysMemory) / frames];
         }
 
         public void Add(Process process) {
@@ -91,6 +117,12 @@ namespace PenOS {
                 else {
                     mWindow.io.Text = "";
                 }
+                if (usingDisk != null) {
+                    mWindow.usingDisk.Text = usingDisk.id;
+                }
+                else {
+                    mWindow.usingDisk.Text = "";
+                }
 
                 if (algorithm == "RR") {
                     roundRobin();
@@ -104,7 +136,7 @@ namespace PenOS {
                 }
 
                 if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
-                    Add(new Process(id, ioTime, clock));
+                    Add(new Process(id, ioTime, clock, frames, diskTime));
                     id++;
                 }
 
@@ -125,8 +157,10 @@ namespace PenOS {
                         MessageBox.Show("Error in delay input: " + delay);
                         break;
                 }
+                drawCanvas();
                 listUpdate();
                 mWindow.dataGrid.ItemsSource = fullList;
+                mWindow.tap.ItemsSource = tapList;
                 clock++;
             }
         }
@@ -141,6 +175,10 @@ namespace PenOS {
                 ioTime = settings.ioTime;
                 algorithm = settings.algorithm;
                 delay = settings.delay;
+                ram = settings.ram;
+                frames = settings.frames;
+
+                sysMemory = (ram + 3) / 4;
             }
             else {
                 MessageBox.Show(settings.errorCheck());
@@ -152,6 +190,26 @@ namespace PenOS {
         }
 
         private void fcfs() {
+            //Waiting Disk
+            if (usingDisk == null) {
+                if (waitingDiskList.Count > 0) {
+                    usingDisk = waitingDiskList.ElementAt(0);
+                    usingDisk.status = "Using Disk";
+                    waitingDiskList.RemoveAt(0);
+                }
+            }
+            else {
+                for (int i = 0; i < Pages.Length; i++) {
+                    if (Pages[i] == null) {
+                        Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                        usingDisk.curFrames++;
+                    }
+                }
+                usingDisk.status = "Ready";
+                readyList.Add(usingDisk);
+                usingDisk = null;
+            }
+
             //If nothing is running, then send something from the readylist
             if (running == null) {
                 if (readyList.Count > 0) {
@@ -165,7 +223,13 @@ namespace PenOS {
                 if (running.cpuUse > running.curTime) {
                     running.curTime++;
                 }
-                else {
+                else if (running.curFrames >= running.frames) {
+                    for (int i = 0; i < Pages.Length; i++) {
+                        if (Pages[i].parent.id == running.id) {
+                            Pages[i] = null;
+                        }
+                    }
+
                     running.endTime = clock;
                     running.IO_initTime = 0;
                     running.IO_totalTime = 0;
@@ -173,6 +237,11 @@ namespace PenOS {
                     running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
                     running.status = "Terminated";
                     terminatedList.Add(running);
+                    running = null;
+                }
+                else {
+                    running.status = "Waiting Disk";
+                    waitingDiskList.Add(running);
                     running = null;
                 }
             }
@@ -257,6 +326,7 @@ namespace PenOS {
             mWindow.newList.ItemsSource = newList.Select(Process => Process.id);
             mWindow.readyList.ItemsSource = readyList.Select(Process => Process.id);
             mWindow.waitingList.ItemsSource = waitingList.Select(Process => Process.id);
+            mWindow.waitingDiskList.ItemsSource = waitingDiskList.Select(Process => Process.id);
             mWindow.terminatedList.ItemsSource = terminatedList.Select(Process => Process.id);
 
             fullList = new ObservableCollection<Process>();
@@ -264,18 +334,170 @@ namespace PenOS {
             fullList = new ObservableCollection<Process>(fullList.Concat(readyList));
             fullList = new ObservableCollection<Process>(fullList.Concat(waitingList));
             fullList = new ObservableCollection<Process>(fullList.Concat(terminatedList));
+            fullList = new ObservableCollection<Process>(fullList.Concat(waitingDiskList));
 
-            if (running != null)
+            tapList = new ObservableCollection<Process>();
+            tapList = new ObservableCollection<Process>(tapList.Concat(readyList));
+            tapList = new ObservableCollection<Process>(tapList.Concat(waitingList));
+
+            if (running != null) {
                 fullList.Add(running);
-            if (waiting != null)
+                tapList.Add(running);
+            }
+            if (waiting != null) {
                 fullList.Add(waiting);
+                tapList.Add(waiting);
+            }
+
+            if (usingDisk != null) {
+                fullList.Add(usingDisk);
+                tapList.Add(usingDisk);
+            }
 
             try {
                 fullList = new ObservableCollection<Process>(fullList.OrderBy(Process => Process.realID));
+                tapList = new ObservableCollection<Process>(tapList.OrderBy(Process => Process.realID));
             }
             catch {
                 MessageBox.Show("Wow you managed to fuck it up");
             }
+
+            mWindow.tap.Columns.Clear();
+
+            ObservableCollection<DataGridTextColumn> _defTap = new ObservableCollection<DataGridTextColumn>();
+
+            DataGridTextColumn id = new DataGridTextColumn() {
+                Header = "ID",
+                Binding = new Binding("id")
+            };
+
+            DataGridTextColumn size = new DataGridTextColumn() {
+                Header = "Size",
+                Binding = new Binding("size")
+            };
+
+            DataGridTextColumn frames = new DataGridTextColumn() {
+                Header = "Frames",
+                Binding = new Binding("frames")
+            };
+
+            DataGridTextColumn status = new DataGridTextColumn() {
+                Header = "Status",
+                Binding = new Binding("status")
+            };
+
+            _defTap.Add(id);
+            _defTap.Add(size);
+            _defTap.Add(frames);
+            _defTap.Add(status);
+
+            foreach (DataGridTextColumn item in _defTap) {
+                mWindow.tap.Columns.Add(item);
+            }
+
+            int maxFrames;
+            try {
+                maxFrames = tapList.Max(Process => Process.framesLocation.Length);
+            }
+            catch {
+                maxFrames = 0;
+            }
+
+            for (int i = 1; i <= maxFrames; i++) {
+                DataGridTextColumn column = new DataGridTextColumn();
+                column.Header = "Frame " + i;
+                string _temp = "framesLocation[" + i + "]";
+                column.Binding = new Binding(_temp);
+                mWindow.tap.Columns.Add(column);
+            }
+        }
+
+        private void drawCanvas() {
+            mWindow.memoryMap.Children.Clear();
+
+            Canvas canvas = mWindow.memoryMap;
+            Line line = new Line();
+
+            line.Stroke = Brushes.Black;
+            line.SnapsToDevicePixels = true;
+            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+
+            line.X1 = 0;
+            line.X2 = canvas.Width;
+            line.Y1 = canvas.Height / 4;
+            line.Y2 = line.Y1;
+
+            line.StrokeThickness = 1;
+
+            TextBlock text = new TextBlock();
+            text.FontSize = 14;
+
+            text.Text = "Operating System";
+            Canvas.SetTop(text, canvas.Height / 8);
+            Canvas.SetLeft(text, canvas.Width / 8);
+
+            canvas.Children.Add(text);
+            canvas.Children.Add(line);
+
+            int toDraw = ram / frames;
+
+            for (int i = 0; i < toDraw; i++) {
+                text = new TextBlock();
+                text.FontSize = 8;
+                text.Text = frames * i + "kb";
+                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
+                Canvas.SetLeft(text, 0);
+
+                canvas.Children.Add(text);
+
+                text = new TextBlock();
+                text.FontSize = 8;
+                text.Text = i.ToString();
+                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
+                Canvas.SetRight(text, 0);
+
+                canvas.Children.Add(text);
+            }
+
+            toDraw = (ram - sysMemory) / frames;
+
+            for (int i = 0; i < toDraw; i++) {
+                line = new Line();
+                line.Stroke = Brushes.Black;
+                line.SnapsToDevicePixels = true;
+                line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+
+                line.X1 = 0;
+                line.X2 = canvas.Width;
+                line.Y1 = (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw);
+                line.Y2 = line.Y1;
+
+                canvas.Children.Add(line);
+            }
+
+            for (int i = 0; i < Pages.Length; i++) {
+                text = new TextBlock();
+                text.FontSize = 10;
+                //text.Text = "Testing boys";
+                try {
+                    text.Text = Pages[i].parent.id + " - Frame " + Pages[i].frameId;
+                }
+                catch {
+                    //Pages[i] = null;
+                }
+                Canvas.SetTop(text, (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+                Canvas.SetLeft(text, canvas.Width / 4);
+
+                canvas.Children.Add(text);
+            }
+
+            mWindow.memoryMap = canvas;
+        }
+
+        private Frame lru() {
+            Frame next = new Frame();
+
+            return next;
         }
     }
 }

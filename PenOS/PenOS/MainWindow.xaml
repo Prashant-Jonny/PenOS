@@ -132,5 +132,40 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="350,60,0,0">
+            <Canvas x:Name="memoryMap"  HorizontalAlignment="Left" Height="306" VerticalAlignment="Top" Width="150" />
+        </Border>
+        <DataGrid x:Name="tap" HorizontalAlignment="Left" VerticalAlignment="Top" Height="158" Width="424" Margin="507,60,0,0" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" CanUserSortColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding id, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Process ID" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Size" Binding="{Binding size, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Size of process" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Frames" Binding="{Binding frames, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Frames of the process" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Status" Binding="{Binding status, Mode=OneWay}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="Current status of the process" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

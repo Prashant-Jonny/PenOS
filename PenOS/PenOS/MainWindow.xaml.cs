@@ -38,7 +38,7 @@ namespace PenOS {
                 paused = false;
                 resetValues();
 
-                simul = new Simulation(settings.probability, settings.quantum, settings.newLimit, settings.readyLimit, settings.waitingLimit, settings.algorithm, settings.delay, settings.ioTime);
+                simul = new Simulation(settings.probability, settings.quantum, settings.newLimit, settings.readyLimit, settings.waitingLimit, settings.algorithm, settings.delay, settings.ioTime, settings.ram, settings.frames, settings.diskTime);
                 simul.Start();
             }
         }

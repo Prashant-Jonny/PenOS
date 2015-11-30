@@ -6,39 +6,122 @@
         xmlns:local="clr-namespace:PenOS"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="Settings" Height="350" Width="230">
+        Title="Settings" Height="370" Width="450">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,27,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " ToolTip="The chance of a new process being randomnly created." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,51,0,0" Width="190" ><Run Text="Probability of a new process being created (0 - 100)   " ToolTip="The chance of a new process being randomnly created." /><InlineUIContainer>
         		<TextBox x:Name="probability_text" Text="50" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" />
         	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,72,0,0"><Run Text="Select an algorithm    " ToolTip="Algorithm used to handle the process simulation." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,96,0,0"><Run Text="Select an algorithm    " ToolTip="Algorithm used to handle the process simulation." /><InlineUIContainer>
             <ComboBox x:Name="algSelected" SelectedIndex="0"  HorizontalAlignment="Left" VerticalAlignment="Top">
                 <ComboBoxItem Content="RR" />
                 <ComboBoxItem Content="FCFS" />
             </ComboBox>
             </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,102,0,0"><Run Text="Quantum (Seconds)   " ToolTip="Time allowed to be in the Running state, used only for Round Robin algorithm." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,126,0,0"><Run Text="Quantum (Seconds)   " ToolTip="Time allowed to be in the Running state, used only for Round Robin algorithm." /><InlineUIContainer>
             <TextBox x:Name="quantum_text" Text="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
         </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,132,0,0" ><Run Text="Delay     " ToolTip="Delay for better appreciation of the simulation." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,156,0,0" ><Run Text="Delay     " ToolTip="Delay for better appreciation of the simulation." /><InlineUIContainer>
         		<ComboBox x:Name="delaySelected" SelectedIndex="1"  Text="Medium (1s)">
                     <ComboBoxItem Content="Slow (2s)" />
                     <ComboBoxItem Content="Medium (1s)" />
                     <ComboBoxItem Content="Fast (0.5s)" />
                 </ComboBox>
         	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,162,0,0"><Run Text="I/O Response Time (Seconds)   " ToolTip="Time that the process takes to be noticed by the IO." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,186,0,0"><Run Text="I/O Response Time (Seconds)   " ToolTip="Time that the process takes to be noticed by the IO." /><InlineUIContainer>
             <TextBox x:Name="ioUse" Text="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" />
         </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="87,192,0,0"><Run Text="List Limits" /></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,218,0,0"><Run Text="Hold               " ToolTip="Limit of the Hold list." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="87,216,0,0"><Run Text="List Limits" /></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,242,0,0"><Run Text="Hold               " ToolTip="Limit of the Hold list." /><InlineUIContainer>
         		<TextBox x:Name="newLimit_text" Text="5" Width="20" />
         	</InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,243,0,0" ><Run Text="Ready             " ToolTip="Limit of the Ready list." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,267,0,0" ><Run Text="Ready             " ToolTip="Limit of the Ready list." /><InlineUIContainer>
             <TextBox x:Name="readyLimit_text" Text="5" Width="20" />
         </InlineUIContainer></TextBlock>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,268,0,0" ><Run Text="Waiting I/O     " ToolTip="Limit of the Waiting list." /><InlineUIContainer>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,292,0,0" ><Run Text="Waiting I/O     " ToolTip="Limit of the Waiting list." /><InlineUIContainer>
             <TextBox x:Name="waitingLimit_text" Text="5" Width="20" />
         </InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Module I" VerticalAlignment="Top" Margin="87,20,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Module II" VerticalAlignment="Top" Margin="301,20,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="235,58,0,0" ><Run Text="RAM     " ToolTip="The RAM memory available." /><InlineUIContainer>
+        		<ComboBox x:Name="ramSelected" SelectedIndex="8"  Text="64kb" SelectionChanged="ramSelected_SelectionChanged">
+                    <ComboBoxItem Content="32kb" />
+                    <ComboBoxItem Content="36kb" />
+                    <ComboBoxItem Content="40kb" />
+                    <ComboBoxItem Content="44kb" />
+                    <ComboBoxItem Content="48kb" />
+                    <ComboBoxItem Content="52kb" />
+                    <ComboBoxItem Content="56kb" />
+                    <ComboBoxItem Content="60kb" />
+                    <ComboBoxItem Content="64kb" />
+                    <ComboBoxItem Content="68kb" />
+                    <ComboBoxItem Content="72kb" />
+                    <ComboBoxItem Content="76kb" />
+                    <ComboBoxItem Content="80kb" />
+                    <ComboBoxItem Content="84kb" />
+                    <ComboBoxItem Content="88kb" />
+                    <ComboBoxItem Content="102kb" />
+                    <ComboBoxItem Content="106kb" />
+                    <ComboBoxItem Content="110kb" />
+                    <ComboBoxItem Content="114kb" />
+                    <ComboBoxItem Content="118kb" />
+                    <ComboBoxItem Content="122kb" />
+                    <ComboBoxItem Content="126kb" />
+                    <ComboBoxItem Content="130kb" />
+                    <ComboBoxItem Content="134kb" />
+                    <ComboBoxItem Content="138kb" />
+                    <ComboBoxItem Content="142kb" />
+                    <ComboBoxItem Content="146kb" />
+                    <ComboBoxItem Content="150kb" />
+                    <ComboBoxItem Content="154kb" />
+                    <ComboBoxItem Content="158kb" />
+                    <ComboBoxItem Content="162kb" />
+                    <ComboBoxItem Content="166kb" />
+                    <ComboBoxItem Content="170kb" />
+                    <ComboBoxItem Content="174kb" />
+                    <ComboBoxItem Content="178kb" />
+                    <ComboBoxItem Content="182kb" />
+                    <ComboBoxItem Content="186kb" />
+                    <ComboBoxItem Content="192kb" />
+                    <ComboBoxItem Content="196kb" />
+                    <ComboBoxItem Content="200kb" />
+                    <ComboBoxItem Content="204kb" />
+                    <ComboBoxItem Content="208kb" />
+                    <ComboBoxItem Content="212kb" />
+                    <ComboBoxItem Content="216kb" />
+                    <ComboBoxItem Content="220kb" />
+                    <ComboBoxItem Content="224kb" />
+                    <ComboBoxItem Content="228kb" />
+                    <ComboBoxItem Content="232kb" />
+                    <ComboBoxItem Content="236kb" />
+                    <ComboBoxItem Content="240kb" />
+                    <ComboBoxItem Content="244kb" />
+                    <ComboBoxItem Content="248kb" />
+                    <ComboBoxItem Content="252kb" />
+                    <ComboBoxItem Content="256kb" />
+                </ComboBox>
+        	</InlineUIContainer></TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="235,97,0,0" ><Run Text="Frame size    " ToolTip="The frame size of each process." /><InlineUIContainer>
+        		<ComboBox x:Name="frameSelected" SelectedIndex="0"  Text="4kb" SelectionChanged="frameSelected_SelectionChanged">
+                    <ComboBoxItem Content="4kb" />
+                    <ComboBoxItem Content="8kb" />
+                    <ComboBoxItem Content="16kb" />
+                    <ComboBoxItem Content="32kb" />
+                    <ComboBoxItem Content="64kb" />
+                </ComboBox>
+            </InlineUIContainer>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="235,134,0,0">
+            <Run Text="Disk Response Time (Seconds)   " ToolTip="The time to wait for the disk to respond" /><InlineUIContainer>
+                <TextBox x:Name="diskTime_text" Text="5" Width="20" />
+            </InlineUIContainer>
+        </TextBlock>
+        <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="339" VerticalAlignment="Top" Width="5" Margin="214,0,0,0" />
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="235,170,0,0"><Run Text="Select the MAP    " ToolTip="Algorithm used to handle the memory assignation simulation." /><InlineUIContainer>
+            <ComboBox x:Name="map" SelectedIndex="0"  HorizontalAlignment="Left" VerticalAlignment="Top">
+                <ComboBoxItem Content="Least Used" />
+                <ComboBoxItem Content="Oldest" />
+            </ComboBox>
+            </InlineUIContainer>
+        </TextBlock>
     </Grid>
 </Window>

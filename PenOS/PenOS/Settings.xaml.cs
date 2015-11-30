@@ -12,8 +12,12 @@ namespace PenOS {
         public int newLimit;
         public int readyLimit;
         public int waitingLimit;
+        public int ram;
+        public int frames;
+        public int diskTime;
         public string algorithm;
         public string delay;
+        public string memoryAlg;
 
         public Settings() {
             InitializeComponent();
@@ -21,6 +25,11 @@ namespace PenOS {
 
         public string errorCheck() {
             bool isNumeric;
+
+            isNumeric = int.TryParse(diskTime_text.Text, out diskTime);
+            if (!isNumeric && diskTime > 0) {
+                return "Please input positive integers only. (Parameters/Disk Response Time)";
+            }
 
             isNumeric = int.TryParse(probability_text.Text, out probability);
             if (!isNumeric && probability >= 0 && probability <= 100) {
@@ -66,6 +75,27 @@ namespace PenOS {
                 delay = delaySelected.Text;
             }
 
+            if (ramSelected.SelectedItem == null) {
+                return "Please make a selection. (RAM)";
+            }
+            else {
+                int.TryParse(ramSelected.Text.Replace("kb", ""), out ram);
+            }
+
+            if (frameSelected.SelectedItem == null) {
+                return "Please make a selection. (Frames)";
+            }
+            else {
+                int.TryParse(frameSelected.Text.Replace("kb", ""), out frames);
+            }
+
+            if (map.SelectedItem == null) {
+                return "Please make a selection. (MAP)";
+            }
+            else {
+                memoryAlg = map.Text;
+            }
+
             return "Passed";
         }
 
@@ -76,6 +106,34 @@ namespace PenOS {
             }
             e.Cancel = true;
             Visibility = Visibility.Hidden;
+        }
+
+        private void frameSelected_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+            try {
+                int.TryParse(frameSelected.Text.Replace("kb", ""), out frames);
+                int.TryParse(ramSelected.Text.Replace("kb", ""), out ram);
+
+                if (frames > ram) {
+                    MessageBox.Show("The frames cannot be bigger than the ram");
+                    frameSelected.SelectedIndex = 0;
+                }
+            }
+            catch {
+            }
+        }
+
+        private void ramSelected_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+            try {
+                int.TryParse(frameSelected.Text.Replace("kb", ""), out frames);
+                int.TryParse(ramSelected.Text.Replace("kb", ""), out ram);
+
+                if (frames > ram) {
+                    MessageBox.Show("The frames cannot be bigger than the ram");
+                    frameSelected.SelectedIndex = 0;
+                }
+            }
+            catch {
+            }
         }
     }
 }
