@@ -232,8 +232,8 @@ namespace PenOS {
                 for (int i = 0; i < Pages.Length; i++) {
                     if (Pages[i] == null) {
                         try {
-                            usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
                             Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].frameId = usingDisk.curFrames;
                             Pages[i].state = 0;
                             Pages[i].location = "RAM";
                             Pages[i].timesUsed = 1;
@@ -272,12 +272,6 @@ namespace PenOS {
                     running.curTime++;
                 }
                 else if (running.curFrames >= running.frames) {
-                    /*for (int i = 0; i < Pages.Length; i++) {
-                        if (Pages[i].parent.id == running.id) {
-                            Pages[i] = null;
-                        }
-                    }*/
-
                     running.endTime = clock;
                     running.IO_initTime = 0;
                     running.IO_totalTime = 0;
@@ -302,6 +296,42 @@ namespace PenOS {
 
         private void roundRobin() {
             //If something is not using the IO, and there is a waiting list, send it.
+            if (usingDisk == null) {
+                if (waitingDiskList.Count > 0) {
+                    usingDisk = waitingDiskList.ElementAt(0);
+                    usingDisk.status = "Using Disk";
+                    waitingDiskList.RemoveAt(0);
+                }
+            }
+            else {
+                for (int i = 0; i < Pages.Length; i++) {
+                    if (Pages[i] == null) {
+                        try {
+                            Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].frameId = usingDisk.curFrames;
+                            Pages[i].state = 0;
+                            Pages[i].location = "RAM";
+                            Pages[i].timesUsed = 1;
+                            usingDisk.curFrames++;
+                        }
+                        catch { }
+                    }
+                    else if (Pages[i].state == 2) {
+                        Pages[i].location = "Memory";
+                        swapped.Add(Pages[i]);
+                        Pages[i] = null;
+
+                        usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
+                        Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                        Pages[i].state = 0;
+                        usingDisk.framesLocation[usingDisk.curFrames].location = "RAM";
+                        usingDisk.curFrames++;
+                    }
+                }
+                usingDisk.status = "Ready";
+                readyList.Add(usingDisk);
+                usingDisk = null;
+            }
             if (waiting == null) {
                 if (waitingList.Count > 0) {
                     waiting = waitingList.ElementAt(0);
@@ -347,12 +377,17 @@ namespace PenOS {
                     if (running.curTime < running.cpuUse) {
                         running.curTime++;
                     }
-                    else {
+                    else if (running.curFrames >= running.frames) {
                         running.endTime = clock;
                         running.sysEndTime = running.endTime - running.arrivalTime + 1;
                         running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
                         running.status = "Terminated";
                         terminatedList.Add(running);
+                        running = null;
+                    }
+                    else {
+                        running.status = "Waiting Disk";
+                        waitingDiskList.Add(running);
                         running = null;
                     }
                 }
