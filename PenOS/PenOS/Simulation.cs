@@ -175,6 +175,7 @@ namespace PenOS {
                 listUpdate();
                 mWindow.dataGrid.ItemsSource = fullList;
                 mWindow.tap.ItemsSource = tapList;
+                mWindow.swapping.ItemsSource = swapped;
                 clock++;
             }
         }
@@ -242,6 +243,7 @@ namespace PenOS {
                     }
                     else if (Pages[i].state == 2) {
                         Pages[i].location = "Memory";
+                        swapped.Add(Pages[i]);
                         Pages[i] = null;
 
                         usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
@@ -270,11 +272,11 @@ namespace PenOS {
                     running.curTime++;
                 }
                 else if (running.curFrames >= running.frames) {
-                    for (int i = 0; i < Pages.Length; i++) {
+                    /*for (int i = 0; i < Pages.Length; i++) {
                         if (Pages[i].parent.id == running.id) {
                             Pages[i] = null;
                         }
-                    }
+                    }*/
 
                     running.endTime = clock;
                     running.IO_initTime = 0;
