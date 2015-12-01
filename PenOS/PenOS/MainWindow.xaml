@@ -167,5 +167,6 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <DataGrid x:Name="swapping" HorizontalAlignment="Left" VerticalAlignment="Top" Height="141" Width="424" Margin="507,225,0,0" />
     </Grid>
 </Window>

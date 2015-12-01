@@ -87,6 +87,7 @@ namespace PenOS {
         public int timesUsed { get; set; }
         public int timeAssigned { get; set; }
         public string location { get; set; }
+        public int state { get; set; }
 
         public Frame() {
             location = "Not Loaded";

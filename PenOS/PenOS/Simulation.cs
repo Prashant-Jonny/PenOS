@@ -34,6 +34,7 @@ namespace PenOS {
 
         private string algorithm;
         private string delay;
+        private string memoryAlg;
 
         private Process running = null;
         private Process waiting = null;
@@ -46,6 +47,8 @@ namespace PenOS {
         private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
         private ObservableCollection<Process> fullList = new ObservableCollection<Process>();
         private ObservableCollection<Process> tapList = new ObservableCollection<Process>();
+
+        private ObservableCollection<Frame> swapped = new ObservableCollection<Frame>();
 
         private Frame[] Pages;
 
@@ -60,7 +63,7 @@ namespace PenOS {
         public Simulation() {
         }
 
-        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected, int ioTime, int ram, int frames, int diskTime) {
+        public Simulation(int probability, int quantum, int newLimit, int readyLimit, int waitingLimit, string algSelected, string delaySelected, int ioTime, int ram, int frames, int diskTime, string memoryAlg) {
             this.probability = probability;
             this.quantum = quantum;
             this.newLimit = newLimit;
@@ -103,6 +106,8 @@ namespace PenOS {
                     }
                 }
 
+                checkPages();
+
                 mWindow.clock.Text = clock.ToString();
 
                 if (running != null) {
@@ -135,6 +140,15 @@ namespace PenOS {
                     break;
                 }
 
+                /*if (memoryAlg == "Least Used") {
+                }
+                else if (memoryAlg == "Oldest") {
+                }
+                else {
+                    MessageBox.Show("Algorithm error" + memoryAlg);
+                    break;
+                }*/
+
                 if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
                     Add(new Process(id, ioTime, clock, frames, diskTime));
                     id++;
@@ -162,6 +176,21 @@ namespace PenOS {
                 mWindow.dataGrid.ItemsSource = fullList;
                 mWindow.tap.ItemsSource = tapList;
                 clock++;
+            }
+        }
+
+        private void checkPages() {
+            for (int i = 0; i < Pages.Length; i++) {
+                if (Pages[i] != null) {
+                    if (Pages[i].state == 0) {
+                        Pages[i].state = 1;
+                        break;
+                    }
+                    else if (Pages[i].state == 1) {
+                        Pages[i].state = 2;
+                        break;
+                    }
+                }
             }
         }
 
@@ -201,7 +230,24 @@ namespace PenOS {
             else {
                 for (int i = 0; i < Pages.Length; i++) {
                     if (Pages[i] == null) {
+                        try {
+                            usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
+                            Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].state = 0;
+                            Pages[i].location = "RAM";
+                            Pages[i].timesUsed = 1;
+                            usingDisk.curFrames++;
+                        }
+                        catch { }
+                    }
+                    else if (Pages[i].state == 2) {
+                        Pages[i].location = "Memory";
+                        Pages[i] = null;
+
+                        usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
                         Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                        Pages[i].state = 0;
+                        usingDisk.framesLocation[usingDisk.curFrames].location = "RAM";
                         usingDisk.curFrames++;
                     }
                 }
@@ -218,7 +264,7 @@ namespace PenOS {
                     readyList.RemoveAt(0);
                 }
             }
-            //If somethign is running, add a 1 to current time running, if its over then send it home
+            //If something is running, add a 1 to current time running, if its over then send it home
             else {
                 if (running.cpuUse > running.curTime) {
                     running.curTime++;
@@ -481,6 +527,58 @@ namespace PenOS {
                 //text.Text = "Testing boys";
                 try {
                     text.Text = Pages[i].parent.id + " - Frame " + Pages[i].frameId;
+                    //state 0 = not used yet, blue
+                    //state 1 = being used, green
+                    //state 2 = used, red
+                    if (Pages[i].state == 0) {
+                        Polygon square = new Polygon();
+                        square.Stroke = Brushes.Yellow;
+                        square.Fill = Brushes.Yellow;
+                        //square.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 255));
+
+                        double height = ((canvas.Height / 4) + ((canvas.Height * 0.75) * (i + 1) / toDraw)) - ((canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+
+                        square.Points = new PointCollection() {
+                            new Point(0, 0), new Point(150, 0), new Point(150, height), new Point(0, height)
+                        };
+
+                        Canvas.SetTop(square, (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+                        Canvas.SetLeft(square, 0);
+
+                        canvas.Children.Add(square);
+                    }
+                    else if (Pages[i].state == 1) {
+                        Polygon square = new Polygon();
+                        square.Stroke = Brushes.Green;
+                        square.Fill = Brushes.Green;
+
+                        double height = ((canvas.Height / 4) + ((canvas.Height * 0.75) * (i + 1) / toDraw)) - ((canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+
+                        square.Points = new PointCollection() {
+                            new Point(0, 0), new Point(150, 0), new Point(150, height), new Point(0, height)
+                        };
+
+                        Canvas.SetTop(square, (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+                        Canvas.SetLeft(square, 0);
+
+                        canvas.Children.Add(square);
+                    }
+                    else {
+                        Polygon square = new Polygon();
+                        square.Stroke = Brushes.Red;
+                        square.Fill = Brushes.Red;
+
+                        double height = ((canvas.Height / 4) + ((canvas.Height * 0.75) * (i + 1) / toDraw)) - ((canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+
+                        square.Points = new PointCollection() {
+                            new Point(0, 0), new Point(150, 0), new Point(150, height), new Point(0, height)
+                        };
+
+                        Canvas.SetTop(square, (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
+                        Canvas.SetLeft(square, 0);
+
+                        canvas.Children.Add(square);
+                    }
                 }
                 catch {
                     //Pages[i] = null;
