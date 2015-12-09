@@ -117,7 +117,7 @@
         </TextBlock>
         <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="339" VerticalAlignment="Top" Width="5" Margin="214,0,0,0" />
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="235,170,0,0"><Run Text="Select the MAP    " ToolTip="Algorithm used to handle the memory assignation simulation." /><InlineUIContainer>
-            <ComboBox x:Name="map" SelectedIndex="0"  HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ComboBox x:Name="map" SelectedIndex="0"  HorizontalAlignment="Left" VerticalAlignment="Top" Text="Least Used">
                 <ComboBoxItem Content="Least Used" />
                 <ComboBoxItem Content="Oldest" />
             </ComboBox>

@@ -167,12 +167,22 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="swapping" HorizontalAlignment="Left" VerticalAlignment="Top" Height="141" Width="424" Margin="507,225,0,0" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" CanUserSortColumns="False">
+        <DataGrid x:Name="swapping" HorizontalAlignment="Left" VerticalAlignment="Top" Height="141" Width="199" Margin="732,225,0,0" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" CanUserSortColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Process ID" Binding="{Binding parent.id, Mode=OneWay}" />
-                <DataGridTextColumn Header="Frame ID" Binding="{Binding frameID, Mode=OneWay}" />
+                <DataGridTextColumn Header="Frame ID" Binding="{Binding frameId, Mode=OneWay}" />
                 <DataGridTextColumn Header="Location" Binding="{Binding location, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>
+        <DataGrid x:Name="pagesList" HorizontalAlignment="Left" VerticalAlignment="Top" Height="143" Width="220" Margin="507,223,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Page ID" Binding="{Binding pageID, Mode=OneWay}" />
+                <DataGridTextColumn Header="Times Used" Binding="{Binding timesUsed, Mode=OneWay}" />
+                <DataGridTextColumn Header="Time Assigned" Binding="{Binding timeAssigned, Mode=OneWay}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="453,15,0,0"><Run Text="Next Page: " /><InlineUIContainer>
+        		<TextBlock x:Name="nextPage" TextWrapping="Wrap" />
+        	</InlineUIContainer></TextBlock>
     </Grid>
 </Window>

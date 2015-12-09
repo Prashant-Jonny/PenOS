@@ -47,10 +47,11 @@ namespace PenOS {
         private ObservableCollection<Process> terminatedList = new ObservableCollection<Process>();
         private ObservableCollection<Process> fullList = new ObservableCollection<Process>();
         private ObservableCollection<Process> tapList = new ObservableCollection<Process>();
+        private ObservableCollection<Page> pageList = new ObservableCollection<Page>();
 
         private ObservableCollection<Frame> swapped = new ObservableCollection<Frame>();
 
-        private Frame[] Pages;
+        private Page[] Pages;
 
         public static MainWindow mWindow;
         public static Settings settings;
@@ -75,13 +76,19 @@ namespace PenOS {
 
             algorithm = algSelected;
             delay = delaySelected;
+            this.memoryAlg = memoryAlg;
 
             this.ram = ram;
             this.frames = frames;
 
             sysMemory = (ram + 3) / 4;
 
-            Pages = new Frame[(ram - sysMemory) / frames];
+            Pages = new Page[(ram - sysMemory) / frames];
+
+            for (int i = 0; i < Pages.Length; i++) {
+                Pages[i] = new Page();
+                Pages[i].pageID = i;
+            }
         }
 
         public void Add(Process process) {
@@ -140,15 +147,6 @@ namespace PenOS {
                     break;
                 }
 
-                /*if (memoryAlg == "Least Used") {
-                }
-                else if (memoryAlg == "Oldest") {
-                }
-                else {
-                    MessageBox.Show("Algorithm error" + memoryAlg);
-                    break;
-                }*/
-
                 if (rand.Next(1, 100) <= probability && newList.Count() < newLimit) {
                     Add(new Process(id, ioTime, clock, frames, diskTime));
                     id++;
@@ -176,21 +174,100 @@ namespace PenOS {
                 mWindow.dataGrid.ItemsSource = fullList;
                 mWindow.tap.ItemsSource = tapList;
                 mWindow.swapping.ItemsSource = swapped;
+                mWindow.pagesList.ItemsSource = pageList;
                 clock++;
             }
         }
 
+        //Change to use algorithm
         private void checkPages() {
+            if (memoryAlg.Equals("Least Used")) {
+                List<int> leastUsed = new List<int>(0);
+
+                foreach (Page item in Pages) {
+                    if (item.state == 0) {
+                        leastUsed.Add(item.timesUsed);
+                    }
+                }
+
+                if (leastUsed.Count > 0) {
+                    leastUsed.Sort();
+                    int min = leastUsed[0];
+
+                    foreach (Page item in Pages) {
+                        if (item.timesUsed == min && item.state == 0) {
+                            item.state = 1;
+                            break;
+                        }
+                    }
+
+                    if (leastUsed.Count > 1) {
+                        min = leastUsed[1];
+
+                        foreach (Page item in Pages) {
+                            if (item.timesUsed == min) {
+                                mWindow.nextPage.Text = "Page " + item.pageID;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        foreach (Page item in Pages) {
+                            if (item.state == 0) {
+                                mWindow.nextPage.Text = "Page " + item.pageID;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (memoryAlg.Equals("Oldest")) {
+                List<int> oldest = new List<int>();
+
+                foreach (Page item in Pages) {
+                    if (item.state == 0) {
+                        oldest.Add(item.timeAssigned);
+                    }
+                }
+
+                if (oldest.Count > 0) {
+                    oldest.Sort();
+                    int old = oldest[0];
+
+                    foreach (Page item in Pages) {
+                        if (item.timeAssigned == old && item.state == 0) {
+                            item.state = 1;
+                            break;
+                        }
+                    }
+                    if (oldest.Count > 1) {
+                        old = oldest[1];
+
+                        foreach (Page item in Pages) {
+                            if (item.timeAssigned == old) {
+                                mWindow.nextPage.Text = "Page " + item.pageID;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        foreach (Page item in Pages) {
+                            if (item.state == 0) {
+                                mWindow.nextPage.Text = "Page " + item.pageID;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                MessageBox.Show("Memory Algorithm error" + memoryAlg);
+            }
+
             for (int i = 0; i < Pages.Length; i++) {
-                if (Pages[i] != null) {
-                    if (Pages[i].state == 0) {
-                        Pages[i].state = 1;
-                        break;
-                    }
-                    else if (Pages[i].state == 1) {
-                        Pages[i].state = 2;
-                        break;
-                    }
+                if (Pages[i].state == 1) {
+                    Pages[i].state = 2;
+                    break;
                 }
             }
         }
@@ -230,26 +307,32 @@ namespace PenOS {
             }
             else {
                 for (int i = 0; i < Pages.Length; i++) {
-                    if (Pages[i] == null) {
+                    if (Pages[i].frame == null) {
                         try {
-                            Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
-                            Pages[i].frameId = usingDisk.curFrames;
+                            Pages[i].frame = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].frame.frameId = usingDisk.curFrames;
                             Pages[i].state = 0;
-                            Pages[i].location = "RAM";
-                            Pages[i].timesUsed = 1;
+                            Pages[i].frame.location = "RAM";
+                            Pages[i].timesUsed++;
+                            Pages[i].timeAssigned = clock;
                             usingDisk.curFrames++;
                         }
                         catch { }
                     }
                     else if (Pages[i].state == 2) {
-                        Pages[i].location = "Memory";
-                        swapped.Add(Pages[i]);
-                        Pages[i] = null;
+                        Pages[i].frame.location = "Memory";
+                        Pages[i].frame.parent.framesDone++;
+                        swapped.Add(Pages[i].frame);
 
-                        usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
-                        Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
+                        Pages[i].frame = null;
                         Pages[i].state = 0;
-                        usingDisk.framesLocation[usingDisk.curFrames].location = "RAM";
+
+                        Pages[i].frame = usingDisk.framesLocation[usingDisk.curFrames];
+                        Pages[i].frame.frameId = usingDisk.curFrames;
+
+                        Pages[i].frame.location = "RAM";
+                        Pages[i].timesUsed++;
+                        Pages[i].timeAssigned = clock;
                         usingDisk.curFrames++;
                     }
                 }
@@ -271,7 +354,7 @@ namespace PenOS {
                 if (running.cpuUse > running.curTime) {
                     running.curTime++;
                 }
-                else if (running.curFrames >= running.frames) {
+                else if (running.framesDone >= running.frames) {
                     running.endTime = clock;
                     running.IO_initTime = 0;
                     running.IO_totalTime = 0;
@@ -305,33 +388,43 @@ namespace PenOS {
             }
             else {
                 for (int i = 0; i < Pages.Length; i++) {
-                    if (Pages[i] == null) {
+                    if (Pages[i].frame == null) {
                         try {
-                            Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
-                            Pages[i].frameId = usingDisk.curFrames;
+                            Pages[i].frame = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].frame.frameId = usingDisk.curFrames;
                             Pages[i].state = 0;
-                            Pages[i].location = "RAM";
-                            Pages[i].timesUsed = 1;
+                            Pages[i].frame.location = "RAM";
+                            Pages[i].timesUsed++;
+                            Pages[i].timeAssigned = clock;
                             usingDisk.curFrames++;
                         }
                         catch { }
                     }
                     else if (Pages[i].state == 2) {
-                        Pages[i].location = "Memory";
-                        swapped.Add(Pages[i]);
-                        Pages[i] = null;
+                        Pages[i].frame.location = "Memory";
+                        Pages[i].frame.parent.framesDone++;
+                        swapped.Add(Pages[i].frame);
 
-                        usingDisk.framesLocation[usingDisk.curFrames].frameId = usingDisk.curFrames;
-                        Pages[i] = usingDisk.framesLocation[usingDisk.curFrames];
                         Pages[i].state = 0;
-                        usingDisk.framesLocation[usingDisk.curFrames].location = "RAM";
-                        usingDisk.curFrames++;
+                        Pages[i].frame = null;
+
+                        try {
+                            Pages[i].frame = usingDisk.framesLocation[usingDisk.curFrames];
+                            Pages[i].frame.frameId = usingDisk.curFrames;
+
+                            Pages[i].frame.location = "RAM";
+                            Pages[i].timesUsed++;
+                            Pages[i].timeAssigned = clock;
+                            usingDisk.curFrames++;
+                        }
+                        catch { }
                     }
                 }
                 usingDisk.status = "Ready";
                 readyList.Add(usingDisk);
                 usingDisk = null;
             }
+
             if (waiting == null) {
                 if (waitingList.Count > 0) {
                     waiting = waitingList.ElementAt(0);
@@ -339,6 +432,7 @@ namespace PenOS {
                     waitingList.RemoveAt(0);
                 }
             }
+
             //Keep waiting until IO_curTime = IO_totalTime
             else {
                 if (waiting.IO_curTime >= waiting.IO_totalTime) {
@@ -377,7 +471,7 @@ namespace PenOS {
                     if (running.curTime < running.cpuUse) {
                         running.curTime++;
                     }
-                    else if (running.curFrames >= running.frames) {
+                    else if (running.framesDone >= running.frames) {
                         running.endTime = clock;
                         running.sysEndTime = running.endTime - running.arrivalTime + 1;
                         running.waitTime = running.sysEndTime - running.cpuUse - running.IO_totalTime + 1;
@@ -422,6 +516,9 @@ namespace PenOS {
             tapList = new ObservableCollection<Process>();
             tapList = new ObservableCollection<Process>(tapList.Concat(readyList));
             tapList = new ObservableCollection<Process>(tapList.Concat(waitingList));
+
+            pageList = new ObservableCollection<Page>();
+            pageList = new ObservableCollection<Page>(pageList.Concat(Pages));
 
             if (running != null) {
                 fullList.Add(running);
@@ -522,27 +619,7 @@ namespace PenOS {
             canvas.Children.Add(text);
             canvas.Children.Add(line);
 
-            int toDraw = ram / frames;
-
-            for (int i = 0; i < toDraw; i++) {
-                text = new TextBlock();
-                text.FontSize = 8;
-                text.Text = frames * i + "kb";
-                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
-                Canvas.SetLeft(text, 0);
-
-                canvas.Children.Add(text);
-
-                text = new TextBlock();
-                text.FontSize = 8;
-                text.Text = i.ToString();
-                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
-                Canvas.SetRight(text, 0);
-
-                canvas.Children.Add(text);
-            }
-
-            toDraw = (ram - sysMemory) / frames;
+            int toDraw = (ram - sysMemory) / frames;
 
             for (int i = 0; i < toDraw; i++) {
                 line = new Line();
@@ -561,9 +638,8 @@ namespace PenOS {
             for (int i = 0; i < Pages.Length; i++) {
                 text = new TextBlock();
                 text.FontSize = 10;
-                //text.Text = "Testing boys";
                 try {
-                    text.Text = Pages[i].parent.id + " - Frame " + Pages[i].frameId;
+                    text.Text = Pages[i].frame.parent.id + " - Frame " + Pages[i].frame.frameId;
                     //state 0 = not used yet, blue
                     //state 1 = being used, green
                     //state 2 = used, red
@@ -571,7 +647,6 @@ namespace PenOS {
                         Polygon square = new Polygon();
                         square.Stroke = Brushes.Yellow;
                         square.Fill = Brushes.Yellow;
-                        //square.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 255));
 
                         double height = ((canvas.Height / 4) + ((canvas.Height * 0.75) * (i + 1) / toDraw)) - ((canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
 
@@ -618,10 +693,29 @@ namespace PenOS {
                     }
                 }
                 catch {
-                    //Pages[i] = null;
                 }
                 Canvas.SetTop(text, (canvas.Height / 4) + ((canvas.Height * 0.75) * i / toDraw));
                 Canvas.SetLeft(text, canvas.Width / 4);
+
+                canvas.Children.Add(text);
+            }
+
+            toDraw = ram / frames;
+
+            for (int i = 0; i < toDraw; i++) {
+                text = new TextBlock();
+                text.FontSize = 8;
+                text.Text = frames * i + "kb";
+                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
+                Canvas.SetLeft(text, 0);
+
+                canvas.Children.Add(text);
+
+                text = new TextBlock();
+                text.FontSize = 8;
+                text.Text = i.ToString();
+                Canvas.SetTop(text, (canvas.Height * i + 1) / toDraw);
+                Canvas.SetRight(text, 0);
 
                 canvas.Children.Add(text);
             }

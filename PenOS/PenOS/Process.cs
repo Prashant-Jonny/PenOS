@@ -10,6 +10,7 @@ namespace PenOS {
         public int size { get; }
         public int frames { get; set; }
         public int curFrames { get; set; }
+        public int framesDone { get; set; }
 
         public int cpuUse { get; }
         public int cpuTime { get; }
@@ -36,6 +37,7 @@ namespace PenOS {
             Random rand = new Random();
 
             curFrames = 0;
+            framesDone = 0;
             this.id = "P" + id;
             realID = id;
             arrivalTime = clock;
@@ -84,25 +86,36 @@ namespace PenOS {
     public class Frame {
         public Process parent { get; set; }
         public int frameId { get; set; }
-        public int timesUsed { get; set; }
-        public int timeAssigned { get; set; }
         public string location { get; set; }
-        public int state { get; set; }
 
         public Frame() {
             location = "Not Loaded";
-            timesUsed = 0;
-            timeAssigned = 0;
-        }
-
-        public Frame(int clock) {
-            location = "Not Loaded";
-            timesUsed = 0;
-            timeAssigned = clock;
         }
 
         public override string ToString() {
-            return location + "/" + timesUsed;
+            return location;
+        }
+    }
+
+    public class Page {
+        public Frame frame { get; set; }
+        public int pageID { get; set; }
+        public int timesUsed { get; set; }
+        public int timeAssigned { get; set; }
+        public int state { get; set; }
+
+        public Page() {
+        }
+
+        public Page(Frame frame) {
+            timeAssigned = 0;
+            timesUsed = 0;
+            state = -1;
+            this.frame = frame;
+        }
+
+        public override string ToString() {
+            return "Page " + pageID;
         }
     }
 }
